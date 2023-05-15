@@ -168,10 +168,10 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
     }
 
-    return this->DefaultProc(hWnd, uMsg, wParam, lParam);
+    return this->DefWndProc(hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT Window::DefaultProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT Window::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }

@@ -193,6 +193,30 @@ void Wnd::StyleEx(DWORD style)
     SetWindowPos(this->hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_DRAWFRAME);
 }
 
+void Wnd::ClipChildren(bool clip)
+{
+    if (clip)
+    {
+        this->Style(this->Style() | WS_CLIPCHILDREN);
+    }
+    else
+    {
+        this->Style(this->Style() &~ WS_CLIPCHILDREN);
+    }
+}
+
+void Wnd::ClipSiblings(bool clip)
+{
+    if (clip)
+    {
+        this->Style(this->Style() | WS_CLIPSIBLINGS);
+    }
+    else
+    {
+        this->Style(this->Style() &~ WS_CLIPSIBLINGS);
+    }
+}
+
 void Wnd::Destroy()
 {
     DestroyWindow(this->hwnd);

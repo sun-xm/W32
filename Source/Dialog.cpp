@@ -48,6 +48,11 @@ int Dialog::Modal()
     return ret;
 }
 
+Control Dialog::Item(int dlgItemId)
+{
+    return Control(GetDlgItem(this->hwnd, dlgItemId));
+}
+
 void Dialog::OnDestroy()
 {
     if (this->modal)

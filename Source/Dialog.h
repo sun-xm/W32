@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "Control.h"
 
 class Dialog : public Window
 {
@@ -10,6 +11,8 @@ public:
     bool Create(HWND parant = 0) override;
 
     int Modal();
+
+    Control Item(int dlgItemId);
 
 protected:
     void OnDestroy() override;

@@ -9,3 +9,4 @@ include_directories(${SRC_DIR})
 add_compile_definitions(WIN32 _WINDOWS _UNICODE UNICODE)
 
 add_subdirectory(Samples/MainWindow MainWindow)
+add_subdirectory(Samples/Controls   Controls)

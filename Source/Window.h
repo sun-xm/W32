@@ -23,7 +23,7 @@ protected:
     void RemoveCommand(WORD command);
 
     virtual LRESULT WindowProc(HWND, UINT, WPARAM, LPARAM);
-    virtual LRESULT DefaultProc(HWND, UINT, WPARAM, LPARAM);
+    virtual LRESULT DefWndProc(HWND, UINT, WPARAM, LPARAM);
 
     static bool Register();
     static LRESULT CALLBACK MessageRouter(HWND, UINT, WPARAM, LPARAM);

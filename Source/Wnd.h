@@ -47,6 +47,9 @@ public:
     void  Style(DWORD style);
     void  StyleEx(DWORD style);
 
+    void ClipChildren(bool clip = true);
+    void ClipSiblings(bool clip = true);
+
     void Destroy();
 
     operator HWND() const;
