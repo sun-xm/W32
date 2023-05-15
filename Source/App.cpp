@@ -1,16 +1,30 @@
 #include "App.h"
+#include "Dialog.h"
 #include "MainWindow.h"
 
 App* App::instance = nullptr;
 
-App::App(HINSTANCE instance, UINT accelerator) : hinst(instance), accel(accelerator)
+App::App(HINSTANCE instance, UINT accelerator) : hinst(instance)
 {
     App::instance = this;
+    this->accel = accelerator ? LoadAcceleratorsW(instance, MAKEINTRESOURCEW(accelerator)) : 0;
 }
 
 App::operator HINSTANCE()
 {
     return this->hinst;
+}
+
+int App::Run(Dialog& dialog, int nCmdShow)
+{
+    if (!dialog.Create())
+    {
+        return -1;
+    }
+
+    ShowWindow(dialog, nCmdShow);
+
+    return dialog.Modal();
 }
 
 int App::Run(MainWindow& main, int nCmdShow)
@@ -22,7 +36,7 @@ int App::Run(MainWindow& main, int nCmdShow)
 
     ShowWindow(main, nCmdShow);
 
-    return MessageLoop(main, this->accel ? LoadAcceleratorsW(this->hinst, MAKEINTRESOURCEW(this->accel)) : nullptr);
+    return MessageLoop(main);
 }
 
 App& App::Instance()
@@ -30,7 +44,12 @@ App& App::Instance()
     return *instance;
 }
 
-int App::MessageLoop(HWND hwnd, HACCEL haccel)
+HACCEL App::Accel()
+{
+    return instance->accel;
+}
+
+int App::MessageLoop(HWND hwnd)
 {
     MSG  msg = {0};
     BOOL ret;
@@ -44,7 +63,7 @@ int App::MessageLoop(HWND hwnd, HACCEL haccel)
 
         if (hwnd)
         {
-            if (haccel && TranslateAcceleratorW(hwnd, haccel, &msg))
+            if (Accel() && TranslateAcceleratorW(hwnd, Accel(), &msg))
             {
                 continue;
             }

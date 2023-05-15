@@ -168,6 +168,11 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
     }
 
+    return this->DefaultProc(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT Window::DefaultProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
     return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
@@ -200,7 +205,7 @@ LRESULT Window::MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 {
     Window* win = nullptr;
 
-    if (WM_NCCREATE == uMsg || WM_INITDIALOG == uMsg)
+    if (WM_NCCREATE == uMsg)
     {
         win = (Window*)((LPCREATESTRUCTW)lParam)->lpCreateParams;
         win->hwnd = hWnd;

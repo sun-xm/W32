@@ -3,6 +3,7 @@
 #define NOMINMAX
 #include <Windows.h>
 
+class Dialog;
 class MainWindow;
 
 class App
@@ -12,15 +13,17 @@ public:
 
     operator HINSTANCE();
 
+    int Run(Dialog&, int);
     int Run(MainWindow&, int);
 
     static App& Instance();
+    static HACCEL Accel();
+
+    static int MessageLoop(HWND hWnd);
 
 protected:
-    static int MessageLoop(HWND hWnd, HACCEL haccel);
-
     HINSTANCE hinst;
-    UINT accel;
+    HACCEL accel;
 
     static App* instance;
 };
