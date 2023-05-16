@@ -9,6 +9,11 @@ Control::~Control()
     this->RemoveProp(L"~");
 }
 
+int Control::ID() const
+{
+    return GetDlgCtrlID(this->hwnd);
+}
+
 bool Control::SetProp(const wchar_t* name, HANDLE data)
 {
     return ::SetPropW(this->hwnd, name, data) ? true : false;

@@ -6,7 +6,9 @@ class Control : public Wnd
 {
 public:
     Control(HWND);
-   ~Control() override;
+   ~Control();
+
+    int ID() const;
 
     bool   SetProp(const wchar_t* name, HANDLE data);
     HANDLE GetProp(const wchar_t* name);
