@@ -11,6 +11,10 @@ Wnd::Wnd(HWND hWnd) : hwnd(hWnd)
 {
 }
 
+Wnd::~Wnd()
+{
+}
+
 Wnd Wnd::Parent() const
 {
     return Wnd(GetParent(this->hwnd));
@@ -156,19 +160,18 @@ void Wnd::Text(const wstring& text)
 
 wstring Wnd::Text() const
 {
+    wstring text;
+
     auto len = GetWindowTextLengthW(this->hwnd);
     if (!len)
     {
-        return wstring();
+        return text;
     }
 
-    vector<wchar_t> buf(len);
-    if (!GetWindowTextW(this->hwnd, &buf[0], (int)buf.size()))
-    {
-        return wstring();
-    }
+    text.resize(len + 1);
+    text.resize(GetWindowTextW(this->hwnd, &text[0], (int)text.length()));
 
-    return wstring(buf.data());
+    return text;
 }
 
 DWORD Wnd::Style() const

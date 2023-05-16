@@ -67,6 +67,12 @@ void Window::OnDestroy()
 {
 }
 
+void Window::OnClose()
+{
+    this->Destroy();
+    PostQuitMessage(0);
+}
+
 void Window::OnPaint()
 {
     PAINTSTRUCT ps;
@@ -83,7 +89,7 @@ void Window::RegisterMessage(UINT message, const function<LRESULT()>& handler)
     this->messages[message] = make_pair(false, handler);
 }
 
-void Window::RegisterCommand(WORD command, const function<void()>& handler)
+void Window::RegisterCommand(WORD command, const function<bool()>& handler)
 {
     this->commands[command] = make_pair(false, handler);
 }
@@ -130,22 +136,35 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
             this->command = LOWORD(wParam);
 
+            bool handled = false;
+
             auto it = this->commands.find(this->command);
             if (it != this->commands.end() && !it->second.first)
             {
                 it->second.first = true;
-                it->second.second();
+                handled = it->second.second();
                 it->second.first = false;
+            }
+
+            if (handled)
+            {
+                return 0;
             }
             else
             {
                 auto parent = this->Parent();
                 if (parent)
                 {
-                    parent.Send(uMsg, wParam, lParam);
+                    return parent.Send(uMsg, wParam, lParam);
                 }
             }
 
+            break;
+        }
+
+        case WM_CLOSE:
+        {
+            this->OnClose();
             return 0;
         }
 

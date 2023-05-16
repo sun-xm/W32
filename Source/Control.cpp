@@ -4,6 +4,11 @@ Control::Control(HWND hwnd) : Wnd(hwnd)
 {
 }
 
+Control::~Control()
+{
+    this->RemoveProp(L"~");
+}
+
 bool Control::SetProp(const wchar_t* name, HANDLE data)
 {
     return ::SetPropW(this->hwnd, name, data) ? true : false;

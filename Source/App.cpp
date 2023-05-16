@@ -1,6 +1,6 @@
 #include "App.h"
 #include "Dialog.h"
-#include "MainWindow.h"
+#include "Window.h"
 
 App* App::instance = nullptr;
 
@@ -27,16 +27,16 @@ int App::Run(Dialog& dialog, int nCmdShow)
     return dialog.Modal();
 }
 
-int App::Run(MainWindow& main, int nCmdShow)
+int App::Run(Window& window, int nCmdShow)
 {
-    if (!main.Create())
+    if (!window.Create())
     {
         return -1;
     }
 
-    ShowWindow(main, nCmdShow);
+    ShowWindow(window, nCmdShow);
 
-    return MessageLoop(main);
+    return MessageLoop(window);
 }
 
 App& App::Instance()

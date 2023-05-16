@@ -11,6 +11,7 @@ bool AppDialog::OnCreated()
     {
         return false;
     }
+    this->Text(L"Controls");
 
     if (!this->CreateStatus())
     {

@@ -16,4 +16,7 @@ public:
     bool SetParts(UINT parts, int* rightEdgePositions);
     UINT GetParts(std::vector<int>& positions) const;
     UINT GetParts() const;
+
+    bool Text(const std::wstring& text, UINT part = 0);
+    std::wstring Text(UINT part = 0) const;
 };

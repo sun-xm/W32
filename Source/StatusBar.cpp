@@ -31,11 +31,6 @@ void StatusBar::Adjust()
 
 bool StatusBar::SetParts(UINT parts, int* positions)
 {
-    if (parts > 256 || !positions)
-    {
-        return false;
-    }
-
     return this->Send(SB_SETPARTS, parts, (LPARAM)positions) ? true : false;
 }
 
@@ -48,4 +43,25 @@ UINT StatusBar::GetParts(vector<int>& positions) const
 UINT StatusBar::GetParts() const
 {
     return (UINT)this->Send(SB_GETPARTS, 0, 0);
+}
+
+bool StatusBar::Text(const wstring& text, UINT part)
+{
+    return this->Send(SB_SETTEXTW, part, (LPARAM)text.c_str()) ? true : false;
+}
+
+wstring StatusBar::Text(UINT part) const
+{
+    wstring text;
+
+    auto len = LOWORD(this->Send(SB_GETTEXTLENGTHW, part, 0));
+    if (!len)
+    {
+        return text;
+    }
+
+    text.resize(len + 1);
+    text.resize(LOWORD(this->Send(SB_GETTEXTW, part, (LPARAM)&text[0])));
+
+    return text;
 }

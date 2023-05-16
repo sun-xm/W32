@@ -14,11 +14,12 @@ public:
 protected:
     virtual bool OnCreated();
     virtual void OnDestroy();
+    virtual void OnClose();
     virtual void OnPaint();
     virtual void OnSize();
 
     void RegisterMessage(UINT message, const std::function<LRESULT()>& handler);
-    void RegisterCommand(WORD command, const std::function<void()>& handler);
+    void RegisterCommand(WORD command, const std::function<bool()>& handler);
     void RemoveMessage(UINT message);
     void RemoveCommand(WORD command);
 
@@ -38,7 +39,7 @@ protected:
     LPARAM lparam;
 
     std::map<UINT, std::pair<bool, std::function<LRESULT()>>> messages;
-    std::map<WORD, std::pair<bool, std::function<void()>>>    commands;
+    std::map<WORD, std::pair<bool, std::function<bool()>>>    commands;
 
     static bool Registered;
 };

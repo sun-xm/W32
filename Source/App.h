@@ -4,7 +4,7 @@
 #include <Windows.h>
 
 class Dialog;
-class MainWindow;
+class Window;
 
 class App
 {
@@ -14,7 +14,7 @@ public:
     operator HINSTANCE();
 
     int Run(Dialog&, int);
-    int Run(MainWindow&, int);
+    int Run(Window&, int);
 
     static App& Instance();
     static HACCEL Accel();
