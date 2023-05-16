@@ -11,6 +11,10 @@ Window::Window() : style(0), styleEx(0)
 {
 }
 
+Window::~Window()
+{
+}
+
 bool Window::Create(HWND parent)
 {
     if (!this->hwnd)

@@ -9,6 +9,7 @@ class Dialog : public Wnd
 {
 public:
     Dialog(UINT dialogId);
+    virtual ~Dialog();
 
     virtual bool Create(HWND parant = 0);
 

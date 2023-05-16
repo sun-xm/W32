@@ -10,7 +10,6 @@ class Wnd
 public:
     Wnd();
     Wnd(HWND);
-    virtual ~Wnd();
 
     Wnd Parent() const;
     void Parent(const Wnd&);

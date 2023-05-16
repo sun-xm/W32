@@ -8,6 +8,7 @@ class Window : public Wnd
 {
 public:
     Window();
+    virtual ~Window();
 
     virtual bool Create(HWND parent = 0);
 

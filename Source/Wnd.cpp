@@ -11,10 +11,6 @@ Wnd::Wnd(HWND hWnd) : hwnd(hWnd)
 {
 }
 
-Wnd::~Wnd()
-{
-}
-
 Wnd Wnd::Parent() const
 {
     return Wnd(GetParent(this->hwnd));

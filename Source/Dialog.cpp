@@ -7,6 +7,10 @@ Dialog::Dialog(UINT dialogId) : id(dialogId), modal(false)
 {
 }
 
+Dialog::~Dialog()
+{
+}
+
 bool Dialog::Create(HWND parent)
 {
     if (!this->hwnd)
