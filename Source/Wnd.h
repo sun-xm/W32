@@ -1,9 +1,7 @@
 #pragma once
 
+#include "Font.h"
 #include <string>
-
-#define NOMINMAX
-#include <Windows.h>
 
 class Wnd
 {
@@ -38,6 +36,8 @@ public:
     int Height() const;
     int ClientW() const;
     int ClientH() const;
+
+    void SetFont(const Font& font);
 
     void Text(const std::wstring&);
     std::wstring Text() const;

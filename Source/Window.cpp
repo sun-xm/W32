@@ -17,45 +17,47 @@ Window::~Window()
 
 bool Window::Create(HWND parent)
 {
-    if (!this->hwnd)
+    if (this->hwnd)
     {
-        if (!Register())
-        {
-            return false;
-        }
+        return false;
+    }
 
-        if (parent)
-        {
-            this->style |= WS_CHILD;
-        }
-        else if (this->style)
-        {
-            this->style &= ~WS_CHILD;
-        }
-        else
-        {
-            this->style = WS_OVERLAPPEDWINDOW;
-        }
+    if (!Register())
+    {
+        return false;
+    }
 
-        CreateWindowExW(this->styleEx,
-                        WNDCLASSNAME,
-                        L"",
-                        this->style,
-                        CW_USEDEFAULT,
-                        CW_USEDEFAULT,
-                        CW_USEDEFAULT,
-                        CW_USEDEFAULT,
-                        parent,
-                        nullptr,
-                        App::Instance(),
-                        this);
+    if (parent)
+    {
+        this->style |= WS_CHILD;
+    }
+    else if (this->style)
+    {
+        this->style &= ~WS_CHILD;
+    }
+    else
+    {
+        this->style = WS_OVERLAPPEDWINDOW;
+    }
 
-        if (this->hwnd)
+    CreateWindowExW(this->styleEx,
+                    WNDCLASSNAME,
+                    L"",
+                    this->style,
+                    CW_USEDEFAULT,
+                    CW_USEDEFAULT,
+                    CW_USEDEFAULT,
+                    CW_USEDEFAULT,
+                    parent,
+                    nullptr,
+                    App::Instance(),
+                    this);
+
+    if (this->hwnd)
+    {
+        if (!this->OnCreated())
         {
-            if (!this->OnCreated())
-            {
-                this->Destroy();
-            }
+            this->Destroy();
         }
     }
 

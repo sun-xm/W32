@@ -149,6 +149,11 @@ int Wnd::ClientH() const
     return rect.bottom - rect.top;
 }
 
+void Wnd::SetFont(const Font& font)
+{
+    this->Send(WM_SETFONT, (WPARAM)(HFONT)font, TRUE);
+}
+
 void Wnd::Text(const wstring& text)
 {
     SetWindowTextW(this->hwnd, text.c_str());

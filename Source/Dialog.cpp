@@ -134,7 +134,7 @@ BOOL Dialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 it->second.first = true;
                 handled = it->second.second();
-                it->second.first = true;
+                it->second.first = false;
             }
 
             if (handled)

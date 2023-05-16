@@ -16,4 +16,5 @@ private:
 
 private:
     StatusBar sbar;
+    Font font;
 };
