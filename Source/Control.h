@@ -5,6 +5,7 @@
 class Control : public Wnd
 {
 public:
+    Control();
     Control(HWND);
    ~Control();
 

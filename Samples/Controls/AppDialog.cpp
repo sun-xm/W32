@@ -1,7 +1,9 @@
 #include "AppDialog.h"
 #include "resource.h"
+#include <CommCtrl.h>
 #include <CheckBox.h>
 #include <ComboBox.h>
+#include <ProgressBar.h>
 
 using namespace std;
 
@@ -41,6 +43,10 @@ bool AppDialog::OnCreated()
 
         return true;
     });
+
+    auto pos = combo.Position();
+
+    ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(50);
 
     this->RegisterCommand(IDC_CHECK, [this]
     {
@@ -92,6 +98,33 @@ bool AppDialog::CreateStatus()
     {
         return false;
     }
+    Control::Subclass(this->sbar, [](HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)->LRESULT
+    {
+        if (WM_SIZE == umsg)
+        {
+            auto combo = Wnd(GetDlgItem(hwnd, IDC_STATUS_COMBO));
+            combo.MoveTo(0, 2);
+            combo.Resize(50, 120);
+
+            auto pos = combo.Position();
+            int a = 0;
+        }
+
+        return Control::DefWndProc(hwnd, umsg, wparam, lparam);
+    });
+
+    ComboBox combo;
+    if (!combo.Create(this->sbar, IDC_STATUS_COMBO))
+    {
+        return false;
+    }
+    combo.Add(L"0",   (void*)0);
+    combo.Add(L"25",  (void*)25);
+    combo.Add(L"50",  (void*)50);
+    combo.Add(L"75",  (void*)75);
+    combo.Add(L"100", (void*)100);
+    combo.Select(2);
+    combo.Show();
 
     int positions[] = { 100, -1 };
     this->sbar.SetParts(2, positions);

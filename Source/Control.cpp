@@ -1,5 +1,9 @@
 #include "Control.h"
 
+Control::Control() : Wnd()
+{
+}
+
 Control::Control(HWND hwnd) : Wnd(hwnd)
 {
 }

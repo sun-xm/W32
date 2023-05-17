@@ -95,34 +95,32 @@ void Wnd::SetFocus()
     ::SetFocus(this->hwnd);
 }
 
-int Wnd::X() const
+POINT Wnd::Position() const
 {
     auto rect = this->WindowRect();
-    auto parent = this->Parent();
+    POINT pos = { rect.left, rect.top };
 
+    auto parent = this->Parent();
     if (parent)
     {
-        POINT client;
+        POINT client = {0}; // Must be cleared before ClientToScreen()
         ClientToScreen(parent, &client);
-        rect.left -= client.x;
+
+        pos.x -= client.x;
+        pos.y -= client.y;
     }
 
-    return rect.left;
+    return pos;
+}
+
+int Wnd::X() const
+{
+    return this->Position().x;
 }
 
 int Wnd::Y() const
 {
-    auto rect = this->WindowRect();
-    auto parent = this->Parent();
-
-    if (parent)
-    {
-        POINT client;
-        ClientToScreen(parent, &client);
-        rect.top -= client.y;
-    }
-
-    return rect.top;
+    return this->Position().y;
 }
 
 int Wnd::Width() const
@@ -147,6 +145,27 @@ int Wnd::ClientH() const
 {
     auto rect = this->ClientRect();
     return rect.bottom - rect.top;
+}
+
+void Wnd::MoveTo(int x, int y, bool repaint)
+{
+    auto rect = this->WindowRect();
+    MoveWindow(this->hwnd, x, y, rect.right - rect.left, rect.bottom - rect.top, repaint ? TRUE : FALSE);
+}
+
+void Wnd::Resize(int w, int h, bool repaint)
+{
+    auto rect = this->WindowRect();
+    auto parent = this->Parent();
+
+    if (parent)
+    {
+        POINT client;
+        ClientToScreen(parent, &client);
+        rect.left -= client.x;
+        rect.top  -= client.y;
+    }
+    MoveWindow(this->hwnd, this->X(), this->Y(), w, h, repaint ? TRUE : FALSE);
 }
 
 void Wnd::SetFont(const Font& font)

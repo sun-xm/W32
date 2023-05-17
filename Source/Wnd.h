@@ -30,12 +30,17 @@ public:
     bool HasFocus() const;
     void SetFocus();
 
+    POINT Position() const;
+
     int X() const;
     int Y() const;
     int Width() const;
     int Height() const;
     int ClientW() const;
     int ClientH() const;
+
+    void MoveTo(int x, int y, bool repaint = false);
+    void Resize(int w, int h, bool repaint = true);
 
     void SetFont(const Font& font);
 
