@@ -98,27 +98,25 @@ bool AppDialog::CreateStatus()
         return false;
     }
 
-    Control::Subclass(this->status, [](HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)->LRESULT
+    this->status.Subclass([this](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        auto status = (StatusBar&)Control(hwnd);
-
-        switch (umsg)
+        switch (uMsg)
         {
             case WM_COMMAND:
             {
-                return SendMessageW(status.Parent(), umsg, wparam, lparam);
+                return this->Send(uMsg, wParam, lParam);
             }
 
             case WM_SIZE:
             {
                 vector<int> positions;
-                status.GetParts(positions);
+                this->status.GetParts(positions);
 
-                auto button = Wnd(GetDlgItem(hwnd, IDC_STATUS_BUTTON));
+                auto button = Wnd(GetDlgItem(this->status, IDC_STATUS_BUTTON));
                 button.MoveTo(positions[0], 2);
-                button.Resize(60, status.Height() - button.Y());
+                button.Resize(60, this->status.Height() - button.Y());
 
-                auto combo = Wnd(GetDlgItem(hwnd, IDC_STATUS_COMBO));
+                auto combo = Wnd(GetDlgItem(this->status, IDC_STATUS_COMBO));
                 combo.MoveTo(button.X() + button.Width(), 2);
                 combo.Resize(50, 120);
 
@@ -126,7 +124,7 @@ bool AppDialog::CreateStatus()
             }
         }
 
-        return Control::DefWndProc(hwnd, umsg, wparam, lparam);
+        return Control::DefWndProc(hWnd, uMsg, wParam, lParam);
     });
 
     Button button;
