@@ -1,6 +1,7 @@
 #include "AppDialog.h"
 #include "resource.h"
 #include <CommCtrl.h>
+#include <Button.h>
 #include <CheckBox.h>
 #include <ComboBox.h>
 #include <ProgressBar.h>
@@ -37,14 +38,12 @@ bool AppDialog::OnCreated()
             if (combo.Selection() >= 0)
             {
                 this->Item(IDC_ECHO).Text(combo.Text());
-                this->sbar.Text(combo.Text());
+                this->status.Text(combo.Text());
             }
         }
 
         return true;
     });
-
-    auto pos = combo.Position();
 
     ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(50);
 
@@ -68,7 +67,7 @@ bool AppDialog::OnCreated()
                 echo.Text(L"Indeterminate");
             }
 
-            this->sbar.Text(echo.Text());
+            this->status.Text(echo.Text());
         }
 
         return true;
@@ -79,7 +78,7 @@ bool AppDialog::OnCreated()
     {
         wstring text = L"Button clicked";
         this->Item(IDC_ECHO).Text(text);
-        this->sbar.Text(text);
+        this->status.Text(text);
         return true;
     });
 
@@ -88,33 +87,64 @@ bool AppDialog::OnCreated()
 
 void AppDialog::OnSize()
 {
-    this->sbar.Adjust();
+    this->status.Adjust();
     Dialog::OnSize();
 }
 
 bool AppDialog::CreateStatus()
 {
-    if (!this->sbar.Create(1000, this->hwnd))
+    if (!this->status.Create(1000, this->hwnd))
     {
         return false;
     }
-    Control::Subclass(this->sbar, [](HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)->LRESULT
-    {
-        if (WM_SIZE == umsg)
-        {
-            auto combo = Wnd(GetDlgItem(hwnd, IDC_STATUS_COMBO));
-            combo.MoveTo(0, 2);
-            combo.Resize(50, 120);
 
-            auto pos = combo.Position();
-            int a = 0;
+    Control::Subclass(this->status, [](HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)->LRESULT
+    {
+        auto status = (StatusBar&)Control(hwnd);
+
+        switch (umsg)
+        {
+            case WM_COMMAND:
+            {
+                return SendMessageW(status.Parent(), umsg, wparam, lparam);
+            }
+
+            case WM_SIZE:
+            {
+                vector<int> positions;
+                status.GetParts(positions);
+
+                auto button = Wnd(GetDlgItem(hwnd, IDC_STATUS_BUTTON));
+                button.MoveTo(positions[0], 2);
+                button.Resize(60, status.Height() - button.Y());
+
+                auto combo = Wnd(GetDlgItem(hwnd, IDC_STATUS_COMBO));
+                combo.MoveTo(button.X() + button.Width(), 2);
+                combo.Resize(50, 120);
+
+                break;
+            }
         }
 
         return Control::DefWndProc(hwnd, umsg, wparam, lparam);
     });
 
+    Button button;
+    if (!button.Create(this->status, IDC_STATUS_BUTTON, L"Button"))
+    {
+        return false;
+    }
+    button.Show();
+
+    this->RegisterCommand(IDC_STATUS_BUTTON, [this]
+    {
+        this->Item(IDC_ECHO).Text(L"Status button clicked");
+        this->status.Text(L"Status button clicked");
+        return true;
+    });
+
     ComboBox combo;
-    if (!combo.Create(this->sbar, IDC_STATUS_COMBO))
+    if (!combo.Create(this->status, IDC_STATUS_COMBO))
     {
         return false;
     }
@@ -126,12 +156,12 @@ bool AppDialog::CreateStatus()
     combo.Select(2);
     combo.Show();
 
-    int positions[] = { 100, -1 };
-    this->sbar.SetParts(2, positions);
+    int positions[] = { 150, -1 };
+    this->status.SetParts(2, positions);
 
-    this->sbar.ClipChildren();
-    this->sbar.Adjust();
-    this->sbar.Show();
+    this->status.ClipChildren();
+    this->status.Adjust();
+    this->status.Show();
 
     return true;
 }

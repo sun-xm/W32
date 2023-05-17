@@ -16,6 +16,6 @@ private:
     bool CreateStatus();
 
 private:
-    StatusBar sbar;
+    StatusBar status;
     Font font;
 };
