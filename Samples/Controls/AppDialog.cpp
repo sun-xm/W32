@@ -1,6 +1,9 @@
 #include "AppDialog.h"
 #include "resource.h"
+#include <CheckBox.h>
 #include <ComboBox.h>
+
+using namespace std;
 
 AppDialog::AppDialog() : Dialog(IDD_MAIN), font(Font::Create(L"MS Shell Dlg", 25))
 {
@@ -32,15 +35,55 @@ bool AppDialog::OnCreated()
             if (combo.Selection() >= 0)
             {
                 this->Item(IDC_ECHO).Text(combo.Text());
+                this->sbar.Text(combo.Text());
             }
-
-            return true;
         }
 
-        return false;
+        return true;
+    });
+
+    this->RegisterCommand(IDC_CHECK, [this]
+    {
+        if (BN_CLICKED == HIWORD(this->wparam))
+        {
+            auto echo = this->Item(IDC_ECHO);
+            auto check = (CheckBox&)this->Item(IDC_CHECK);
+
+            if (check.IsChecked())
+            {
+                echo.Text(L"Checked");
+            }
+            else if (check.IsUnchecked())
+            {
+                echo.Text(L"Unchecked");
+            }
+            else
+            {
+                echo.Text(L"Indeterminate");
+            }
+
+            this->sbar.Text(echo.Text());
+        }
+
+        return true;
+    });
+
+
+    this->RegisterCommand(IDC_BUTTON, [this]
+    {
+        wstring text = L"Button clicked";
+        this->Item(IDC_ECHO).Text(text);
+        this->sbar.Text(text);
+        return true;
     });
 
     return true;
+}
+
+void AppDialog::OnSize()
+{
+    this->sbar.Adjust();
+    Dialog::OnSize();
 }
 
 bool AppDialog::CreateStatus()

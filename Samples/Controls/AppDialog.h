@@ -10,6 +10,7 @@ public:
 
 protected:
     bool OnCreated() override;
+    void OnSize() override;
 
 private:
     bool CreateStatus();
