@@ -5,6 +5,7 @@
 #include <CheckBox.h>
 #include <ComboBox.h>
 #include <ProgressBar.h>
+#include <Slider.h>
 
 using namespace std;
 
@@ -46,6 +47,21 @@ bool AppDialog::OnCreated()
     });
 
     ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(50);
+
+    ((Slider&)this->Item(IDC_SLIDER)).Position(50);
+    this->RegisterMessage(WM_HSCROLL, [this]
+    {
+        if ((LPARAM)GetDlgItem(*this, IDC_SLIDER) == this->lparam)
+        {
+            auto hwnd = (HWND)this->Item(IDC_SLIDER);
+            auto pos = ((Slider&)this->Item(IDC_SLIDER)).Position();
+            ProgressBar(GetDlgItem(this->hwnd, IDC_PROGRESS)).Position(pos);
+            ProgressBar(GetDlgItem(this->status, IDC_STATUS_PROGRESS)).Position(pos);
+            return true;
+        }
+
+        return false;
+    });
 
     this->RegisterCommand(IDC_CHECK, [this]
     {
@@ -183,8 +199,10 @@ bool AppDialog::CreateStatus()
         this->Item(IDC_ECHO).Text(combo.Text());
         this->status.Text(combo.Text());
 
-        ((ProgressBar&)this->Item(IDC_PROGRESS)).Position((int)combo.Data());
-        ProgressBar(GetDlgItem(this->status, IDC_STATUS_PROGRESS)).Position((int)combo.Data());
+        auto pos = (int)combo.Data();
+        ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(pos);
+        ProgressBar(GetDlgItem(this->status, IDC_STATUS_PROGRESS)).Position(pos);
+        Slider(GetDlgItem(*this, IDC_SLIDER)).Position(pos);
 
         return true;
     });
