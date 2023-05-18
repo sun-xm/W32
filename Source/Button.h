@@ -5,5 +5,5 @@
 class Button : public Control
 {
 public:
-    bool Create(HWND parent, UINT id, const std::wstring& text, HINSTANCE instance = nullptr);
+    bool Create(HWND parent, UINT id, const std::wstring& text, DWORD style = 0, HINSTANCE instance = nullptr);
 };
