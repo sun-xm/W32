@@ -5,6 +5,9 @@
 class ComboBox : public Control
 {
 public:
+    ComboBox();
+    ComboBox(HWND);
+
     bool Create(HWND parent, UINT id, DWORD type = CBS_DROPDOWNLIST, HINSTANCE instance = nullptr);
 
     int Add(const std::wstring& text);

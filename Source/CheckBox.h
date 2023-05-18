@@ -5,6 +5,9 @@
 class CheckBox : public Control
 {
 public:
+    CheckBox();
+    CheckBox(HWND);
+
     bool Create(HWND parent, UINT id, const std::wstring& text, DWORD type = BS_AUTOCHECKBOX, HINSTANCE instance = nullptr);
 
     void Check();

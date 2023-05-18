@@ -3,6 +3,14 @@
 
 using namespace std;
 
+CheckBox::CheckBox() : Control()
+{
+}
+
+CheckBox::CheckBox(HWND hWnd) : Control(hWnd)
+{
+}
+
 bool CheckBox::Create(HWND parent, UINT id, const wstring& text, DWORD type, HINSTANCE instance)
 {
     if (!parent || this->hwnd)

@@ -1,6 +1,14 @@
 #include "ProgressBar.h"
 #include <CommCtrl.h>
 
+ProgressBar::ProgressBar() : Control()
+{
+}
+
+ProgressBar::ProgressBar(HWND hWnd) : Control(hWnd)
+{
+}
+
 bool ProgressBar::Create(HWND parent, UINT id, HINSTANCE instance)
 {
     if (!parent || this->hwnd)

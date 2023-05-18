@@ -116,9 +116,17 @@ bool AppDialog::CreateStatus()
                 button.MoveTo(positions[0], 2);
                 button.Resize(60, this->status.Height() - button.Y());
 
+                auto check = Wnd(GetDlgItem(this->status, IDC_STATUS_CHECK));
+                check.MoveTo(button.X() + button.Width() + 5, 2);
+                check.Resize(100, this->status.Height() - check.Y());
+
                 auto combo = Wnd(GetDlgItem(this->status, IDC_STATUS_COMBO));
-                combo.MoveTo(button.X() + button.Width(), 2);
+                combo.MoveTo(check.X() + check.Width(), 2);
                 combo.Resize(50, 120);
+
+                auto progress = Wnd(GetDlgItem(this->status, IDC_STATUS_PROGRESS));
+                progress.MoveTo(combo.X() + combo.Width(), 2);
+                progress.Resize(this->status.Width() - combo.X() - combo.Width(), this->status.Height() - progress.Y());
 
                 break;
             }
@@ -141,6 +149,21 @@ bool AppDialog::CreateStatus()
         return true;
     });
 
+    CheckBox check;
+    if (!check.Create(this->status, IDC_STATUS_CHECK, L"Unchecked"))
+    {
+        return false;
+    }
+    check.Show();
+
+    this->RegisterCommand(IDC_STATUS_CHECK, [this]
+    {
+        auto check = CheckBox(GetDlgItem(this->status, IDC_STATUS_CHECK));
+        this->Item(IDC_ECHO).Text(check.IsChecked() ? L"Checked" : (check.IsUnchecked() ? L"Unchecked" : L"Indeterminate"));
+        this->status.Text(this->Item(IDC_ECHO).Text());
+        return true;
+    });
+
     ComboBox combo;
     if (!combo.Create(this->status, IDC_STATUS_COMBO))
     {
@@ -153,6 +176,26 @@ bool AppDialog::CreateStatus()
     combo.Add(L"100", (void*)100);
     combo.Select(2);
     combo.Show();
+
+    this->RegisterCommand(IDC_STATUS_COMBO, [this]
+    {
+        auto combo = ComboBox(GetDlgItem(this->status, IDC_STATUS_COMBO));
+        this->Item(IDC_ECHO).Text(combo.Text());
+        this->status.Text(combo.Text());
+
+        ((ProgressBar&)this->Item(IDC_PROGRESS)).Position((int)combo.Data());
+        ProgressBar(GetDlgItem(this->status, IDC_STATUS_PROGRESS)).Position((int)combo.Data());
+
+        return true;
+    });
+
+    ProgressBar progress;
+    if (!progress.Create(this->status, IDC_STATUS_PROGRESS))
+    {
+        return false;
+    }
+    progress.Position(50);
+    progress.Show();
 
     int positions[] = { 150, -1 };
     this->status.SetParts(2, positions);

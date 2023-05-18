@@ -5,6 +5,9 @@
 class ProgressBar : public Control
 {
 public:
+    ProgressBar();
+    ProgressBar(HWND);
+
     bool Create(HWND parent, UINT id, HINSTANCE instance = nullptr);
 
     void SetRange(int  min, int  max);

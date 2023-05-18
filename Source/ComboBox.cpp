@@ -3,6 +3,14 @@
 
 using namespace std;
 
+ComboBox::ComboBox()
+{
+}
+
+ComboBox::ComboBox(HWND hWnd) : Control(hWnd)
+{
+}
+
 bool ComboBox::Create(HWND parent, UINT id, DWORD type, HINSTANCE instance)
 {
     if (!parent || this->hwnd)
