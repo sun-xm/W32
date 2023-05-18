@@ -7,7 +7,7 @@ using namespace std;
 
 bool Window::Registered = false;
 
-Window::Window() : style(0), styleEx(0)
+Window::Window()
 {
 }
 
@@ -15,7 +15,7 @@ Window::~Window()
 {
 }
 
-bool Window::Create(HWND parent)
+bool Window::Create(HWND parent, DWORD style, DWORD styleEx)
 {
     if (this->hwnd)
     {
@@ -29,21 +29,21 @@ bool Window::Create(HWND parent)
 
     if (parent)
     {
-        this->style |= WS_CHILD;
+        style |= WS_CHILD;
     }
-    else if (this->style)
+    else if (style)
     {
-        this->style &= ~WS_CHILD;
+        style &= ~WS_CHILD;
     }
     else
     {
-        this->style = WS_OVERLAPPEDWINDOW;
+        style = WS_OVERLAPPEDWINDOW;
     }
 
-    CreateWindowExW(this->styleEx,
+    CreateWindowExW(styleEx,
                     WNDCLASSNAME,
                     L"",
-                    this->style,
+                    style,
                     CW_USEDEFAULT,
                     CW_USEDEFAULT,
                     CW_USEDEFAULT,

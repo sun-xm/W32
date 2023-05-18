@@ -10,7 +10,7 @@ public:
     Window();
     virtual ~Window();
 
-    virtual bool Create(HWND parent = 0);
+    virtual bool Create(HWND parent = 0, DWORD style = 0, DWORD styleEx = 0);
 
 protected:
     virtual bool OnCreated();
@@ -31,9 +31,6 @@ protected:
     static LRESULT CALLBACK MessageRouter(HWND, UINT, WPARAM, LPARAM);
 
 protected:
-    DWORD style;
-    DWORD styleEx;
-
     UINT message;
     WORD command;
     WPARAM wparam;

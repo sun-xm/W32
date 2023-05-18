@@ -9,14 +9,21 @@ ProgressBar::ProgressBar(HWND hWnd) : Control(hWnd)
 {
 }
 
-bool ProgressBar::Create(HWND parent, UINT id, HINSTANCE instance)
+bool ProgressBar::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
 {
     if (!parent || this->hwnd)
     {
         return false;
     }
 
-    this->hwnd = CreateWindowExW(0, PROGRESS_CLASSW, nullptr, WS_CHILD, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
+    if (!style)
+    {
+        style = TBS_HORZ;
+    }
+
+    style |= WS_CHILD;
+
+    this->hwnd = CreateWindowExW(0, PROGRESS_CLASSW, nullptr, style, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
 
     return !!this->hwnd;
 }

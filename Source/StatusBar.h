@@ -9,7 +9,7 @@ public:
     StatusBar();
     StatusBar(HWND hWnd);
 
-    bool Create(UINT dlgItemId, HWND parent);
+    bool Create(HWND parent, UINT id, DWORD style = 0, HINSTANCE instance = nullptr);
 
     void Adjust();
 

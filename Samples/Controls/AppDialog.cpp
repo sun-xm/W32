@@ -109,7 +109,7 @@ void AppDialog::OnSize()
 
 bool AppDialog::CreateStatus()
 {
-    if (!this->status.Create(1000, this->hwnd))
+    if (!this->status.Create(this->hwnd, IDC_STATUS))
     {
         return false;
     }
@@ -175,8 +175,11 @@ bool AppDialog::CreateStatus()
     this->RegisterCommand(IDC_STATUS_CHECK, [this]
     {
         auto check = CheckBox(GetDlgItem(this->status, IDC_STATUS_CHECK));
-        this->Item(IDC_ECHO).Text(check.IsChecked() ? L"Checked" : (check.IsUnchecked() ? L"Unchecked" : L"Indeterminate"));
-        this->status.Text(this->Item(IDC_ECHO).Text());
+        auto text = check.IsChecked() ? L"Checked" : (check.IsUnchecked() ? L"Unchecked" : L"Indeterminate");
+
+        check.Text(text);
+        this->Item(IDC_ECHO).Text(text);
+        this->status.Text(text);
         return true;
     });
 

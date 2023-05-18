@@ -11,14 +11,21 @@ CheckBox::CheckBox(HWND hWnd) : Control(hWnd)
 {
 }
 
-bool CheckBox::Create(HWND parent, UINT id, const wstring& text, DWORD type, HINSTANCE instance)
+bool CheckBox::Create(HWND parent, UINT id, const wstring& text, DWORD style, HINSTANCE instance)
 {
     if (!parent || this->hwnd)
     {
         return false;
     }
 
-    this->hwnd = CreateWindowExW(0, WC_BUTTONW, text.c_str(), type | BS_CHECKBOX | WS_CHILD, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
+    if (!style)
+    {
+        style = BS_AUTOCHECKBOX;
+    }
+
+    style |= WS_CHILD;
+
+    this->hwnd = CreateWindowExW(0, WC_BUTTONW, text.c_str(), style, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
 
     return !!this->hwnd;
 }

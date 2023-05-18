@@ -8,7 +8,7 @@ public:
     ComboBox();
     ComboBox(HWND);
 
-    bool Create(HWND parent, UINT id, DWORD type = CBS_DROPDOWNLIST, HINSTANCE instance = nullptr);
+    bool Create(HWND parent, UINT id, DWORD style = 0, HINSTANCE instance = nullptr);
 
     int Add(const std::wstring& text);
     int Add(const std::wstring& text, void* data);

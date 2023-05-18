@@ -8,7 +8,7 @@ public:
     CheckBox();
     CheckBox(HWND);
 
-    bool Create(HWND parent, UINT id, const std::wstring& text, DWORD type = BS_AUTOCHECKBOX, HINSTANCE instance = nullptr);
+    bool Create(HWND parent, UINT id, const std::wstring& text, DWORD style = 0, HINSTANCE instance = nullptr);
 
     void Check();
     void Uncheck();

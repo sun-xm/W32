@@ -1,5 +1,4 @@
 #include "StatusBar.h"
-#include "App.h"
 #include <CommCtrl.h>
 
 using namespace std;
@@ -12,15 +11,22 @@ StatusBar::StatusBar(HWND hWnd) : Control(hWnd)
 {
 }
 
-bool StatusBar::Create(UINT dlgItemId, HWND parent)
+bool StatusBar::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
 {
     if (!parent || this->hwnd)
     {
         return false;
     }
 
-    this->hwnd = CreateWindowExW(0, STATUSCLASSNAMEW, nullptr, CCS_BOTTOM | WS_CHILD, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)dlgItemId, App::Instance(), nullptr);
-    auto e = GetLastError();
+    if (!style)
+    {
+        style = CCS_BOTTOM;
+    }
+
+    style |= WS_CHILD;
+
+    this->hwnd = CreateWindowExW(0, STATUSCLASSNAMEW, nullptr, style, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
+
     return !!this->hwnd;
 }
 

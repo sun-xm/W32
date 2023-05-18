@@ -11,21 +11,25 @@ ComboBox::ComboBox(HWND hWnd) : Control(hWnd)
 {
 }
 
-bool ComboBox::Create(HWND parent, UINT id, DWORD type, HINSTANCE instance)
+bool ComboBox::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
 {
     if (!parent || this->hwnd)
     {
         return false;
     }
 
-    DWORD style = WS_CHILD | WS_TABSTOP | WS_VSCROLL;
+    if (!style)
+    {
+        style = CBS_DROPDOWNLIST;
+    }
 
-    if (CBS_SIMPLE != type)
+    style |= WS_CHILD | WS_VSCROLL;
+    if (CBS_SIMPLE != (style & 0xF))
     {
         style |= WS_OVERLAPPED;
     }
 
-    this->hwnd = CreateWindowExW(0, WC_COMBOBOXW, nullptr, type | style, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
+    this->hwnd = CreateWindowExW(0, WC_COMBOBOXW, nullptr, style, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
 
     return !!this->hwnd;
 }
