@@ -50,3 +50,8 @@ int ProgressBar::Position() const
 {
     return (int)this->Send(PBM_GETPOS);
 }
+
+void ProgressBar::Marquee(bool enable, UINT update)
+{
+    this->Send(PBM_SETMARQUEE, enable ? TRUE : FALSE, update);
+}

@@ -15,4 +15,6 @@ public:
 
     void Position(int pos);
     int  Position() const;
+
+    void Marquee(bool enable, UINT update = 0);
 };

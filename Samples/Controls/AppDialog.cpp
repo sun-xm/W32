@@ -1,3 +1,6 @@
+// To enable common control version >= 6
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 #include "AppDialog.h"
 #include "resource.h"
 #include <CommCtrl.h>
@@ -66,7 +69,11 @@ bool AppDialog::OnCreated()
         return true;
     });
 
+    auto progress = (ProgressBar&)this->Item(IDC_PROGRESS);
+    progress.Position(50);
+
     ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(50);
+    ((ProgressBar&)this->Item(IDC_PROGRESS)).Send(PBM_SETMARQUEE, TRUE);
 
     ((Slider&)this->Item(IDC_SLIDER)).Position(50);
     this->RegisterMessage(WM_HSCROLL, [this]
