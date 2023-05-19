@@ -14,6 +14,7 @@ protected:
 
 private:
     bool CreateStatus();
+    void Position(int pos);
 
 private:
     StatusBar status;

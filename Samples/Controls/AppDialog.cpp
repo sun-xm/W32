@@ -6,6 +6,7 @@
 #include <ComboBox.h>
 #include <ProgressBar.h>
 #include <Slider.h>
+#include <Spinner.h>
 
 using namespace std;
 
@@ -27,6 +28,25 @@ bool AppDialog::OnCreated()
     }
 
     this->Item(IDC_ECHO).SetFont(this->font);
+
+    auto spinner = (Spinner&)this->Item(IDC_SPIN);
+    spinner.Buddy(this->Item(IDC_EDIT));
+    spinner.Range(0, 100);
+    spinner.SetPos(50);
+
+    this->RegisterCommand(IDC_EDIT, [this]
+    {
+        if (EN_CHANGE == HIWORD(this->wparam))
+        {
+            int pos;
+            if (((Spinner&)this->Item(IDC_SPIN)).GetPos(pos))
+            {
+                this->Position(pos);
+            }
+        }
+
+        return true;
+    });
 
     auto combo = (ComboBox&)this->Item(IDC_COMBO);
     combo.Add(L"Hello");
@@ -53,10 +73,7 @@ bool AppDialog::OnCreated()
     {
         if ((LPARAM)GetDlgItem(*this, IDC_SLIDER) == this->lparam)
         {
-            auto hwnd = (HWND)this->Item(IDC_SLIDER);
-            auto pos = ((Slider&)this->Item(IDC_SLIDER)).Position();
-            ProgressBar(GetDlgItem(this->hwnd, IDC_PROGRESS)).Position(pos);
-            ProgressBar(GetDlgItem(this->status, IDC_STATUS_PROGRESS)).Position(pos);
+            this->Position(((Slider&)this->Item(IDC_SLIDER)).Position());
             return true;
         }
 
@@ -199,14 +216,7 @@ bool AppDialog::CreateStatus()
     this->RegisterCommand(IDC_STATUS_COMBO, [this]
     {
         auto combo = ComboBox(GetDlgItem(this->status, IDC_STATUS_COMBO));
-        this->Item(IDC_ECHO).Text(combo.Text());
-        this->status.Text(combo.Text());
-
-        auto pos = (int)combo.Data();
-        ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(pos);
-        ProgressBar(GetDlgItem(this->status, IDC_STATUS_PROGRESS)).Position(pos);
-        Slider(GetDlgItem(*this, IDC_SLIDER)).Position(pos);
-
+        this->Position((int)combo.Data());
         return true;
     });
 
@@ -226,4 +236,16 @@ bool AppDialog::CreateStatus()
     this->status.Show();
 
     return true;
+}
+
+void AppDialog::Position(int pos)
+{
+    auto text = to_wstring(pos);
+    this->Item(IDC_ECHO).Text(text);
+    this->status.Text(text);
+
+    ((Spinner&)this->Item(IDC_SPIN)).SetPos(pos);
+    ((Slider&)this->Item(IDC_SLIDER)).Position(pos);
+    ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(pos);
+    ((ProgressBar&)Control(GetDlgItem(this->status, IDC_STATUS_PROGRESS))).Position(pos);
 }

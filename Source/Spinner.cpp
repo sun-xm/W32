@@ -21,16 +21,17 @@ HWND Spinner::Buddy() const
     return (HWND)this->Send(UDM_GETBUDDY);
 }
 
-void Spinner::Position(int pos)
+void Spinner::SetPos(int pos)
 {
     this->Send(UDM_SETPOS32, 0, (LPARAM)pos);
 }
 
-bool Spinner::Position(int& pos) const
+bool Spinner::GetPos(int& pos) const
 {
     BOOL success;
-    pos = this->Send(UDM_GETPOS32, 0, (LPARAM)success);
-    return success ? true : false;
+    pos = (int)this->Send(UDM_GETPOS32, 0, (LPARAM)&success);
+    auto err = GetLastError();
+    return success ? false : true;
 }
 
 void Spinner::Range(int min, int max)
