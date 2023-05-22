@@ -8,7 +8,7 @@ public:
     ProgressBar();
     ProgressBar(HWND);
 
-    bool Create(HWND parent, UINT id, DWORD style = 0, HINSTANCE instance = nullptr);
+    bool Create(HWND parent, UINT id, DWORD style = TBS_HORZ, HINSTANCE instance = nullptr);
 
     void SetRange(int  min, int  max);
     void GetRange(int& min, int& max);

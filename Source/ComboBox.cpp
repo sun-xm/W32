@@ -1,5 +1,4 @@
 #include "ComboBox.h"
-#include <CommCtrl.h>
 
 using namespace std;
 
@@ -18,12 +17,8 @@ bool ComboBox::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
         return false;
     }
 
-    if (!style)
-    {
-        style = CBS_DROPDOWNLIST;
-    }
+    style |= WS_CHILD;
 
-    style |= WS_CHILD | WS_VSCROLL;
     if (CBS_SIMPLE != (style & 0xF))
     {
         style |= WS_OVERLAPPED;

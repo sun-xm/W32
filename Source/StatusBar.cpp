@@ -1,5 +1,4 @@
 #include "StatusBar.h"
-#include <CommCtrl.h>
 
 using namespace std;
 
@@ -16,11 +15,6 @@ bool StatusBar::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
     if (!parent || this->hwnd)
     {
         return false;
-    }
-
-    if (!style)
-    {
-        style = CCS_BOTTOM;
     }
 
     style |= WS_CHILD;

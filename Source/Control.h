@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Wnd.h"
+#include <CommCtrl.h>
 #include <functional>
 
 class Control : public Wnd

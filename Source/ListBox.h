@@ -2,13 +2,13 @@
 
 #include "Control.h"
 
-class ComboBox : public Control
+class ListBox : public Control
 {
 public:
-    ComboBox();
-    ComboBox(HWND);
+    ListBox();
+    ListBox(HWND);
 
-    bool Create(HWND parent, UINT id, DWORD style = CBS_DROPDOWNLIST | WS_VSCROLL, HINSTANCE instance = nullptr);
+    bool Create(HWND parent, UINT id, DWORD style = LBS_NOINTEGRALHEIGHT | WS_BORDER | WS_VSCROLL, HINSTANCE instance = nullptr);
 
     int Add(const std::wstring& text);
     int Add(const std::wstring& text, void* data);

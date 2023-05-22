@@ -1,5 +1,4 @@
 #include "ProgressBar.h"
-#include <CommCtrl.h>
 
 ProgressBar::ProgressBar() : Control()
 {
@@ -14,11 +13,6 @@ bool ProgressBar::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
     if (!parent || this->hwnd)
     {
         return false;
-    }
-
-    if (!style)
-    {
-        style = TBS_HORZ;
     }
 
     style |= WS_CHILD;

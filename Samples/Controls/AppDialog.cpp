@@ -10,6 +10,7 @@
 #include <ProgressBar.h>
 #include <Slider.h>
 #include <Spinner.h>
+#include <ListBox.h>
 
 using namespace std;
 
@@ -110,12 +111,29 @@ bool AppDialog::OnCreated()
         return true;
     });
 
-
     this->RegisterCommand(IDC_BUTTON, [this]
     {
         wstring text = L"Button clicked";
         this->Item(IDC_ECHO).Text(text);
         this->status.Text(text);
+        return true;
+    });
+
+    auto list = (ListBox&)this->Item(IDC_LIST);
+    list.Add(L"Hello");
+    list.Add(L"World");
+    this->RegisterCommand(IDC_LIST, [this]
+    {
+        if (LBN_SELCHANGE == HIWORD(this->wparam))
+        {
+            auto list = (ListBox&)this->Item(IDC_LIST);
+            if (list.Selection() >= 0)
+            {
+                this->Item(IDC_ECHO).Text(list.Text());
+                this->status.Text(list.Text());
+            }
+        }
+
         return true;
     });
 

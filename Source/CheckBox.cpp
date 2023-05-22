@@ -1,5 +1,4 @@
 #include "CheckBox.h"
-#include <CommCtrl.h>
 
 using namespace std;
 
@@ -16,11 +15,6 @@ bool CheckBox::Create(HWND parent, UINT id, const wstring& text, DWORD style, HI
     if (!parent || this->hwnd)
     {
         return false;
-    }
-
-    if (!style)
-    {
-        style = BS_AUTOCHECKBOX;
     }
 
     style |= WS_CHILD;

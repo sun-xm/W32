@@ -1,5 +1,4 @@
 #include "Button.h"
-#include <CommCtrl.h>
 
 using namespace std;
 
