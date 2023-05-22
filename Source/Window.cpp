@@ -1,5 +1,4 @@
 #include "Window.h"
-#include "App.h"
 
 #define WNDCLASSNAME L"{317B2C5D-2708-458B-874A-93B07E3723D1}"
 
@@ -15,7 +14,7 @@ Window::~Window()
 {
 }
 
-bool Window::Create(HWND parent, DWORD style, DWORD styleEx)
+bool Window::Create(HWND parent, DWORD style, DWORD styleEx, HINSTANCE instance)
 {
     if (this->hwnd)
     {
@@ -50,7 +49,7 @@ bool Window::Create(HWND parent, DWORD style, DWORD styleEx)
                     CW_USEDEFAULT,
                     parent,
                     nullptr,
-                    App::Instance(),
+                    instance,
                     this);
 
     if (this->hwnd)

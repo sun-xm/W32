@@ -70,10 +70,7 @@ bool AppDialog::OnCreated()
     });
 
     auto progress = (ProgressBar&)this->Item(IDC_PROGRESS);
-    progress.Position(50);
-
-    ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(50);
-    ((ProgressBar&)this->Item(IDC_PROGRESS)).Send(PBM_SETMARQUEE, TRUE);
+    progress.Marquee(true);
 
     ((Slider&)this->Item(IDC_SLIDER)).Position(50);
     this->RegisterMessage(WM_HSCROLL, [this]
@@ -153,19 +150,19 @@ bool AppDialog::CreateStatus()
                 this->status.GetParts(positions);
 
                 auto button = Wnd(GetDlgItem(this->status, IDC_STATUS_BUTTON));
-                button.MoveTo(positions[0], 2);
-                button.Resize(60, this->status.Height() - button.Y());
+                button.MoveTo(positions[0], 0);
+                button.Resize(60, this->status.Height() + 1);
 
                 auto check = Wnd(GetDlgItem(this->status, IDC_STATUS_CHECK));
-                check.MoveTo(button.X() + button.Width() + 5, 2);
-                check.Resize(100, this->status.Height() - check.Y());
+                check.MoveTo(button.X() + button.Width() + 5, 1);
+                check.Resize(100, this->status.Height() - 1);
 
                 auto combo = Wnd(GetDlgItem(this->status, IDC_STATUS_COMBO));
-                combo.MoveTo(check.X() + check.Width(), 2);
+                combo.MoveTo(check.X() + check.Width(), 0);
                 combo.Resize(50, 120);
 
                 auto progress = Wnd(GetDlgItem(this->status, IDC_STATUS_PROGRESS));
-                progress.MoveTo(combo.X() + combo.Width(), 2);
+                progress.MoveTo(combo.X() + combo.Width(), 0);
                 progress.Resize(this->status.Width() - combo.X() - combo.Width(), this->status.Height() - progress.Y());
 
                 break;
@@ -251,8 +248,14 @@ void AppDialog::Position(int pos)
     this->Item(IDC_ECHO).Text(text);
     this->status.Text(text);
 
+    auto progress = (ProgressBar&)this->Item(IDC_PROGRESS);
+    if (PBS_MARQUEE & progress.Style())
+    {
+        progress.Marquee(false);
+    }
+    progress.Position(pos);
+
     ((Spinner&)this->Item(IDC_SPIN)).SetPos(pos);
     ((Slider&)this->Item(IDC_SLIDER)).Position(pos);
-    ((ProgressBar&)this->Item(IDC_PROGRESS)).Position(pos);
     ((ProgressBar&)Control(GetDlgItem(this->status, IDC_STATUS_PROGRESS))).Position(pos);
 }

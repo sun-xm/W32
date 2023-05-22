@@ -17,19 +17,20 @@ App::operator HINSTANCE()
 
 int App::Run(Dialog& dialog, int nCmdShow)
 {
-    if (!dialog.Create())
+    if (!dialog.Create(nullptr, this->hinst))
     {
         return -1;
     }
 
+    dialog.StyleEx(dialog.StyleEx() | WS_EX_DLGMODALFRAME);
     ShowWindow(dialog, nCmdShow);
 
-    return dialog.Modal();
+    return App::MessageLoop(dialog);
 }
 
 int App::Run(Window& window, int nCmdShow)
 {
-    if (!window.Create())
+    if (!window.Create(0, WS_OVERLAPPEDWINDOW, 0, this->hinst))
     {
         return -1;
     }

@@ -10,7 +10,7 @@ public:
     Window();
     virtual ~Window();
 
-    virtual bool Create(HWND parent = 0, DWORD style = 0, DWORD styleEx = 0);
+    virtual bool Create(HWND parent = 0, DWORD style = 0, DWORD styleEx = 0, HINSTANCE instance = 0);
 
 protected:
     virtual bool OnCreated();

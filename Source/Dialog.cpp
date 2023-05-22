@@ -1,9 +1,8 @@
 #include "Dialog.h"
-#include "App.h"
 
 using namespace std;
 
-Dialog::Dialog(UINT dialogId) : id(dialogId), modal(false)
+Dialog::Dialog(UINT dialogId) : id(dialogId)
 {
 }
 
@@ -11,11 +10,11 @@ Dialog::~Dialog()
 {
 }
 
-bool Dialog::Create(HWND parent)
+bool Dialog::Create(HWND parent, HINSTANCE instance)
 {
     if (!this->hwnd)
     {
-        CreateDialogParamW(App::Instance(),
+        CreateDialogParamW(instance,
                            MAKEINTRESOURCEW(this->id),
                            parent,
                            (DLGPROC)MessageRouter,
@@ -33,26 +32,6 @@ bool Dialog::Create(HWND parent)
     return !!this->hwnd;
 }
 
-int Dialog::Modal()
-{
-    auto parent = this->Parent();
-    if (parent)
-    {
-        parent.Disable();
-    }
-
-    this->modal = true;
-    auto ret = (int)App::MessageLoop(this->hwnd);
-    this->modal = false;
-
-    if (parent)
-    {
-        parent.Enable();
-    }
-
-    return ret;
-}
-
 Control Dialog::Item(int dlgItemId)
 {
     return Control(GetDlgItem(this->hwnd, dlgItemId));
@@ -65,16 +44,17 @@ bool Dialog::OnCreated()
 
 void Dialog::OnDestroy()
 {
-    if (this->modal)
-    {
-        PostQuitMessage(0);
-    }
 }
 
 void Dialog::OnClose()
 {
+    auto modal = this->StyleEx() & WS_EX_DLGMODALFRAME;
     this->Destroy();
-    PostQuitMessage(0);
+
+    if (modal)
+    {
+        PostQuitMessage(0);
+    }
 }
 
 void Dialog::OnSize()

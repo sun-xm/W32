@@ -11,9 +11,7 @@ public:
     Dialog(UINT dialogId);
     virtual ~Dialog();
 
-    virtual bool Create(HWND parant = 0);
-
-    int Modal();
+    virtual bool Create(HWND parant = 0, HINSTANCE instance = 0);
 
     Control Item(int dlgItemId);
 
@@ -40,8 +38,6 @@ protected:
     WORD command;
     WPARAM wparam;
     LPARAM lparam;
-
-    bool modal;
 
     std::map<UINT, std::pair<bool, std::function<bool()>>> messages;
     std::map<WORD, std::pair<bool, std::function<bool()>>> commands;

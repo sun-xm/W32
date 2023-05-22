@@ -53,5 +53,14 @@ int ProgressBar::Position() const
 
 void ProgressBar::Marquee(bool enable, UINT update)
 {
+    if (enable)
+    {
+        this->Style(this->Style() | PBS_MARQUEE);
+    }
+    else
+    {
+        this->Style(this->Style() &~ PBS_MARQUEE);
+    }
+
     this->Send(PBM_SETMARQUEE, enable ? TRUE : FALSE, update);
 }
