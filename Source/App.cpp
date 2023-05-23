@@ -25,7 +25,7 @@ int App::Run(Dialog& dialog, int nCmdShow)
     dialog.StyleEx(dialog.StyleEx() | WS_EX_DLGMODALFRAME);
     ShowWindow(dialog, nCmdShow);
 
-    return App::MessageLoop(dialog);
+    return App::MessageLoop(dialog, App::Accel());
 }
 
 int App::Run(Window& window, int nCmdShow)
@@ -37,7 +37,7 @@ int App::Run(Window& window, int nCmdShow)
 
     ShowWindow(window, nCmdShow);
 
-    return MessageLoop(window);
+    return MessageLoop(window, App::Accel());
 }
 
 App& App::Instance()
@@ -50,7 +50,7 @@ HACCEL App::Accel()
     return instance->accel;
 }
 
-int App::MessageLoop(HWND hwnd)
+int App::MessageLoop(HWND hWnd, HACCEL hAcc)
 {
     MSG  msg = {0};
     BOOL ret;
@@ -62,14 +62,14 @@ int App::MessageLoop(HWND hwnd)
             break;
         }
 
-        if (hwnd)
+        if (hWnd)
         {
-            if (Accel() && TranslateAcceleratorW(hwnd, Accel(), &msg))
+            if (hAcc && TranslateAcceleratorW(hWnd, hAcc, &msg))
             {
                 continue;
             }
 
-            if (IsDialogMessageW(hwnd, &msg))
+            if (IsDialogMessageW(hWnd, &msg))
             {
                 continue;
             }

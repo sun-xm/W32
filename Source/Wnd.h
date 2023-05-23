@@ -55,6 +55,7 @@ public:
     void ClipChildren(bool clip = true);
     void ClipSiblings(bool clip = true);
 
+    void Close();
     void Destroy();
 
     operator HWND() const;

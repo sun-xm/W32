@@ -19,7 +19,7 @@ public:
     static App& Instance();
     static HACCEL Accel();
 
-    static int MessageLoop(HWND hWnd);
+    static int MessageLoop(HWND hWnd, HACCEL hAcc);
 
 protected:
     HINSTANCE hinst;

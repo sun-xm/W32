@@ -10,5 +10,5 @@ add_library(W32LIB STATIC ${SOURCE})
 include_directories(${SRC_DIR})
 add_compile_definitions(WIN32 _WINDOWS _UNICODE UNICODE)
 
-add_subdirectory(Samples/MainWindow MainWindow)
+add_subdirectory(Samples/Borderless Borderless)
 add_subdirectory(Samples/Controls   Controls)

@@ -1,7 +1,7 @@
 #include <App.h>
-#include <Window.h>
+#include "MainWindow.h"
 
 int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR, int nCmdShow)
 {
-    return App(instance).Run(Window(), nCmdShow);
+    return App(instance).Run(MainWindow(), nCmdShow);
 }

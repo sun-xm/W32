@@ -240,6 +240,11 @@ void Wnd::ClipSiblings(bool clip)
     }
 }
 
+void Wnd::Close()
+{
+    this->Send(WM_CLOSE);
+}
+
 void Wnd::Destroy()
 {
     DestroyWindow(this->hwnd);
