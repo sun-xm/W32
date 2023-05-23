@@ -23,6 +23,9 @@ public:
     void Update() const;
     bool IsVisible() const;
 
+    void Invalidate(bool erase = false) const;
+    void Invalidate(const RECT& rect, bool erase = false) const;
+
     void Enable();
     void Disable();
     bool IsEnabled() const;
@@ -41,8 +44,9 @@ public:
 
     void MoveTo(int x, int y, bool repaint = false);
     void Resize(int w, int h, bool repaint = true);
+    void ResizeClient(int w, int h, bool repaint = true);
 
-    void SetFont(const Font& font);
+    void SetFont(const HFONT font);
 
     void Text(const std::wstring&);
     std::wstring Text() const;

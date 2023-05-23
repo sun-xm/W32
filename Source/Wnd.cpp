@@ -65,6 +65,16 @@ bool Wnd::IsVisible() const
     return IsWindowVisible(this->hwnd) ? true : false;
 }
 
+void Wnd::Invalidate(bool erase) const
+{
+    InvalidateRect(this->hwnd, nullptr, erase ? TRUE : FALSE);
+}
+
+void Wnd::Invalidate(const RECT& rect, bool erase) const
+{
+    InvalidateRect(this->hwnd, &rect,  erase ? TRUE : FALSE);
+}
+
 void Wnd::Enable()
 {
     EnableWindow(this->hwnd, TRUE);
@@ -168,9 +178,23 @@ void Wnd::Resize(int w, int h, bool repaint)
     MoveWindow(this->hwnd, this->X(), this->Y(), w, h, repaint ? TRUE : FALSE);
 }
 
-void Wnd::SetFont(const Font& font)
+void Wnd::ResizeClient(int w, int h, bool repaint)
 {
-    this->Send(WM_SETFONT, (WPARAM)(HFONT)font, TRUE);
+    auto wrect = this->WindowRect();
+    auto crect = this->ClientRect();
+
+    auto ww = wrect.right - wrect.left;
+    auto wh = wrect.bottom - wrect.top;
+
+    auto cw = crect.right - crect.left;
+    auto ch = crect.bottom - crect.top;
+
+    this->Resize(w + ww - cw, h + wh - ch, repaint);
+}
+
+void Wnd::SetFont(const HFONT font)
+{
+    this->Send(WM_SETFONT, (WPARAM)font, TRUE);
 }
 
 void Wnd::Text(const wstring& text)

@@ -13,7 +13,7 @@ public:
 
     virtual bool Create(HWND parant = 0, HINSTANCE instance = 0);
 
-    Control Item(int dlgItemId);
+    Control Item(int dlgItemId) const;
 
 protected:
     virtual bool OnCreated();

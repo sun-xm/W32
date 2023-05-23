@@ -32,7 +32,7 @@ bool Dialog::Create(HWND parent, HINSTANCE instance)
     return !!this->hwnd;
 }
 
-Control Dialog::Item(int dlgItemId)
+Control Dialog::Item(int dlgItemId) const
 {
     return Control(GetDlgItem(this->hwnd, dlgItemId));
 }
