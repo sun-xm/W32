@@ -12,3 +12,4 @@ add_compile_definitions(WIN32 _WINDOWS _UNICODE UNICODE)
 
 add_subdirectory(Samples/Borderless Borderless)
 add_subdirectory(Samples/Controls   Controls)
+add_subdirectory(Samples/Layered    Layered)
