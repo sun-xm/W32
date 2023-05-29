@@ -74,8 +74,14 @@ void Window::OnDestroy()
 
 void Window::OnClose()
 {
+    auto owner = GetWindow(this->hwnd, GW_OWNER);
+
     this->Destroy();
-    PostQuitMessage(0);
+
+    if (!owner)
+    {
+        PostQuitMessage(0);
+    }
 }
 
 void Window::OnPaint()
