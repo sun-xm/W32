@@ -72,6 +72,11 @@ void Window::OnDestroy()
 {
 }
 
+bool Window::OnCommand()
+{
+    return false;
+}
+
 void Window::OnClose()
 {
     auto owner = GetWindow(this->hwnd, GW_OWNER);
@@ -146,6 +151,10 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_COMMAND:
         {
             this->command = LOWORD(wParam);
+            if (this->OnCommand())
+            {
+                return 0;
+            }
 
             bool handled = false;
 

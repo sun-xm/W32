@@ -46,6 +46,11 @@ void Dialog::OnDestroy()
 {
 }
 
+bool Dialog::OnCommand()
+{
+    return false;
+}
+
 void Dialog::OnClose()
 {
     auto modal = this->StyleEx() & WS_EX_DLGMODALFRAME;
@@ -106,6 +111,10 @@ BOOL Dialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_COMMAND:
         {
             this->command = LOWORD(wParam);
+            if (this->OnCommand())
+            {
+                return TRUE;
+            }
 
             bool handled = false;
 

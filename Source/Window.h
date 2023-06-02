@@ -15,6 +15,7 @@ public:
 protected:
     virtual bool OnCreated();
     virtual void OnDestroy();
+    virtual bool OnCommand();
     virtual void OnClose();
     virtual void OnPaint();
     virtual void OnSize();
