@@ -66,7 +66,7 @@ void Dialog::OnSize()
 {
 }
 
-void Dialog::RegisterMessage(UINT message, const function<bool()>& handler)
+void Dialog::RegisterMessage(UINT message, const function<Result()>& handler)
 {
     this->messages[message] = make_pair(false, handler);
 }
@@ -94,10 +94,9 @@ void Dialog::RemoveCommand(WORD command)
     }
 }
 
-bool Dialog::SetResult(LONG_PTR result)
+void Dialog::SetResult(LONG_PTR result)
 {
     SetWindowLongPtrW(this->hwnd, DWLP_MSGRESULT, result);
-    return true;
 }
 
 BOOL Dialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -166,9 +165,15 @@ BOOL Dialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             if (it != this->messages.end() && !it->second.first)
             {
                 it->second.first = true;
-                auto handled = it->second.second();
+                auto result = it->second.second();
                 it->second.first = false;
-                return handled ? TRUE : FALSE;
+
+                if (result.first)
+                {
+                    this->SetResult(result.second);
+                }
+
+                return result.first ? TRUE : FALSE;
             }
 
             break;
@@ -176,6 +181,11 @@ BOOL Dialog::DialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     return FALSE; // Pass unhandled message to default dialog process
+}
+
+Dialog::Result Dialog::Handled(bool handled, LONG_PTR result)
+{
+    return Result(handled, result);
 }
 
 INT_PTR Dialog::MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

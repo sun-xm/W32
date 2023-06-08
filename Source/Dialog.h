@@ -8,6 +8,8 @@
 class Dialog : public Wnd
 {
 public:
+    typedef std::pair<bool, LONG_PTR> Result;
+
     Dialog(UINT dialogId);
     virtual ~Dialog();
 
@@ -22,14 +24,16 @@ protected:
     virtual void OnClose();
     virtual void OnSize();
 
-    void RegisterMessage(UINT message, const std::function<bool()>& handler);
+    void RegisterMessage(UINT message, const std::function<Result()>& handler);
     void RegisterCommand(WORD command, const std::function<bool()>& handler);
     void RemoveMessage(UINT message);
     void RemoveCommand(WORD command);
 
-    bool SetResult(LONG_PTR result);
+    void SetResult(LONG_PTR result);
 
     BOOL DialogProc(HWND, UINT, WPARAM, LPARAM);
+
+    static Result Handled(bool handled, LONG_PTR result = 0);
 
     static INT_PTR CALLBACK MessageRouter(HWND, UINT, WPARAM, LPARAM);
 
@@ -40,6 +44,6 @@ protected:
     WPARAM wparam;
     LPARAM lparam;
 
-    std::map<UINT, std::pair<bool, std::function<bool()>>> messages;
-    std::map<WORD, std::pair<bool, std::function<bool()>>> commands;
+    std::map<UINT, std::pair<bool, std::function<Result()>>> messages;
+    std::map<WORD, std::pair<bool, std::function<bool()>>>   commands;
 };

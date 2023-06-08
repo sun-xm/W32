@@ -79,10 +79,10 @@ bool AppDialog::OnCreated()
         if ((LPARAM)GetDlgItem(*this, IDC_SLIDER) == this->lparam)
         {
             this->Position(((Slider&)this->Item(IDC_SLIDER)).Position());
-            return true;
+            return Handled(true);
         }
 
-        return false;
+        return Handled(false);
     });
 
     this->RegisterCommand(IDC_CHECK, [this]
