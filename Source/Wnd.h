@@ -9,8 +9,11 @@ public:
     Wnd();
     Wnd(HWND);
 
+    Wnd Owner() const;
+    void Owner(HWND);
+
     Wnd Parent() const;
-    void Parent(const Wnd&);
+    void Parent(HWND);
 
     bool Post(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
     LRESULT Send(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;

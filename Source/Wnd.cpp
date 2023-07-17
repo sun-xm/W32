@@ -11,12 +11,28 @@ Wnd::Wnd(HWND hWnd) : hwnd(hWnd)
 {
 }
 
+Wnd Wnd::Owner() const
+{
+    if (!this->hwnd)
+    {
+        return Wnd();
+    }
+
+    return Wnd((HWND)GetWindowLongPtrW(this->hwnd, GWLP_HWNDPARENT));
+}
+
+void Wnd::Owner(HWND owner)
+{
+    SetWindowLongPtrW(this->hwnd, GWLP_HWNDPARENT, (LONG_PTR)owner);
+    SetWindowPos(this->hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_DRAWFRAME);
+}
+
 Wnd Wnd::Parent() const
 {
     return Wnd(GetParent(this->hwnd));
 }
 
-void Wnd::Parent(const Wnd& parent)
+void Wnd::Parent(HWND parent)
 {
     SetParent(this->hwnd, parent);
 }
