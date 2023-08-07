@@ -6,6 +6,11 @@ Application* Application::instance = nullptr;
 
 Application::Application(HINSTANCE instance, UINT accelerator) : hinst(instance)
 {
+    if (Application::instance)
+    {
+        throw std::runtime_error("Only one Application instance is allowed");
+    }
+
     Application::instance = this;
     this->accel = accelerator ? LoadAcceleratorsW(instance, MAKEINTRESOURCEW(accelerator)) : 0;
 }
