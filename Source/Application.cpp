@@ -1,21 +1,21 @@
-#include "App.h"
+#include "Application.h"
 #include "Dialog.h"
 #include "Window.h"
 
-App* App::instance = nullptr;
+Application* Application::instance = nullptr;
 
-App::App(HINSTANCE instance, UINT accelerator) : hinst(instance)
+Application::Application(HINSTANCE instance, UINT accelerator) : hinst(instance)
 {
-    App::instance = this;
+    Application::instance = this;
     this->accel = accelerator ? LoadAcceleratorsW(instance, MAKEINTRESOURCEW(accelerator)) : 0;
 }
 
-App::operator HINSTANCE()
+Application::operator HINSTANCE()
 {
     return this->hinst;
 }
 
-int App::Run(Dialog& dialog, int nCmdShow)
+int Application::Run(Dialog& dialog, int nCmdShow)
 {
     if (!dialog.Create(nullptr, this->hinst))
     {
@@ -25,10 +25,10 @@ int App::Run(Dialog& dialog, int nCmdShow)
     dialog.StyleEx(dialog.StyleEx() | WS_EX_DLGMODALFRAME);
     ShowWindow(dialog, nCmdShow);
 
-    return App::MessageLoop(dialog, App::Accel());
+    return Application::MessageLoop(dialog, Application::Accel());
 }
 
-int App::Run(Window& window, int nCmdShow)
+int Application::Run(Window& window, int nCmdShow)
 {
     if (!window.Create(0, WS_OVERLAPPEDWINDOW, 0, this->hinst))
     {
@@ -37,20 +37,20 @@ int App::Run(Window& window, int nCmdShow)
 
     ShowWindow(window, nCmdShow);
 
-    return MessageLoop(window, App::Accel());
+    return MessageLoop(window, Application::Accel());
 }
 
-App& App::Instance()
+Application& Application::Instance()
 {
     return *instance;
 }
 
-HACCEL App::Accel()
+HACCEL Application::Accel()
 {
     return instance->accel;
 }
 
-int App::MessageLoop(HWND hWnd, HACCEL hAcc)
+int Application::MessageLoop(HWND hWnd, HACCEL hAcc)
 {
     MSG  msg = {0};
     BOOL ret;
