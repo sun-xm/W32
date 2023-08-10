@@ -96,6 +96,10 @@ void Window::OnPaint()
     EndPaint(this->hwnd, &ps);
 }
 
+void Window::OnMove()
+{
+}
+
 void Window::OnSize()
 {
 }
@@ -139,6 +143,12 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_PAINT:
         {
             this->OnPaint();
+            return 0;
+        }
+
+        case WM_MOVE:
+        {
+            this->OnMove();
             return 0;
         }
 

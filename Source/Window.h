@@ -18,6 +18,7 @@ protected:
     virtual bool OnCommand();
     virtual void OnClose();
     virtual void OnPaint();
+    virtual void OnMove();
     virtual void OnSize();
 
     void RegisterMessage(UINT message, const std::function<LRESULT()>& handler);
