@@ -208,9 +208,14 @@ void Wnd::ResizeClient(int w, int h, bool repaint)
     this->Resize(w + ww - cw, h + wh - ch, repaint);
 }
 
-void Wnd::SetFont(const HFONT font)
+void Wnd::SetFont(HFONT font)
 {
     this->Send(WM_SETFONT, (WPARAM)font, TRUE);
+}
+
+void Wnd::SetMenu(HMENU menu)
+{
+    ::SetMenu(this->hwnd, menu);
 }
 
 void Wnd::Text(const wstring& text)

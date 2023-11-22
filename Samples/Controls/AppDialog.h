@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Dialog.h>
+#include <Font.h>
 #include <StatusBar.h>
 
 class AppDialog : public Dialog

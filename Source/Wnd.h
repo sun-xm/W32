@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Font.h"
 #include <string>
+#include <Windows.h>
 
 class Wnd
 {
@@ -49,7 +49,8 @@ public:
     void Resize(int w, int h, bool repaint = true);
     void ResizeClient(int w, int h, bool repaint = true);
 
-    void SetFont(const HFONT font);
+    void SetFont(HFONT font);
+    void SetMenu(HMENU menu);
 
     void Text(const std::wstring&);
     std::wstring Text() const;
