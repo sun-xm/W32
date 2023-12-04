@@ -11,7 +11,8 @@ protected:
     void OnSize() override;
 
 private:
-    void OnMenu(int id);
+    void OnCheck(int id);
+    void OnRadio(int id);
 
 private:
     Menu menu;

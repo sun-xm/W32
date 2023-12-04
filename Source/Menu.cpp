@@ -55,6 +55,41 @@ MenuItem::operator bool() const
     return !!this->menu;
 }
 
+
+RadioMenu::RadioMenu() : menu(nullptr), first(0), last(0)
+{
+}
+
+RadioMenu::RadioMenu(HMENU menu, UINT first, UINT last) : menu(menu), first(first), last(last)
+{
+}
+
+void RadioMenu::Check(UINT id, bool checked)
+{
+    CheckMenuRadioItem(this->menu, this->first, this->last, checked ? id : 0, MF_BYCOMMAND);
+}
+
+void RadioMenu::Uncheck(UINT id)
+{
+    this->Check(id, false);
+}
+
+UINT RadioMenu::GetChecked() const
+{
+    for (UINT id = this->first; id <= this->last; id++)
+    {
+        auto state = GetMenuState(this->menu, id, MF_BYCOMMAND);
+
+        if (-1 != state && state & MF_CHECKED)
+        {
+            return id;
+        }
+    }
+
+    return 0;
+}
+
+
 Menu::Menu() : menu(nullptr), parent(nullptr), pos(0)
 {
 }
@@ -114,6 +149,14 @@ Menu Menu::SubMenuByPos(int pos) const
 {
     auto item = GetSubMenu(*this, pos);
     return Menu(item, this->menu, pos);
+}
+
+RadioMenu Menu::RadioMenu(UINT first, UINT last) const
+{
+    HMENU parent;
+    int pos;
+    auto menu = Search(this->parent, this->menu, first, 0, parent, pos);
+    return ::RadioMenu(menu, first, last);
 }
 
 MenuItem Menu::Item(UINT id) const

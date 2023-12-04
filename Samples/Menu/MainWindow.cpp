@@ -1,7 +1,8 @@
 #include "MainWindow.h"
 #include "resource.h"
 
-#define REGISTER(id)    RegisterCommand(id, [this]{ this->OnMenu(id); return true; })
+#define REGISTER(id)    RegisterCommand(id, [this]{ this->OnCheck(id); return true; })
+#define RADIO(first, last, id) RegisterCommand(id, [this]{ auto radio = this->menu.RadioMenu(first, last); radio.Check(id); this->OnRadio(radio.GetChecked()); return true; })
 
 bool MainWindow::OnCreated()
 {
@@ -35,8 +36,9 @@ bool MainWindow::OnCreated()
 
     REGISTER(ID_MENU_ITEM0);
     REGISTER(ID_MENU_ITEM1);
-    REGISTER(ID_MENU_ITEM2);
-    REGISTER(ID_MENU_ITEM3);
+
+    RADIO(ID_MENU_ITEM2, ID_MENU_ITEM3, ID_MENU_ITEM2);
+    RADIO(ID_MENU_ITEM2, ID_MENU_ITEM3, ID_MENU_ITEM3);
 
     return true;
 }
@@ -48,10 +50,15 @@ void MainWindow::OnSize()
     Window::OnSize();
 }
 
-void MainWindow::OnMenu(int id)
+void MainWindow::OnCheck(int id)
 {
-    this->bar.Text(L"Item" + std::to_wstring(id - ID_MENU_ITEM0) + L" clicked");
-
     auto item = this->menu.Item(id);
     item.Check(!item.IsChecked());
+    this->bar.Text(L"Item" + std::to_wstring(id - ID_MENU_ITEM0) + (item.IsChecked() ? L" checked" : L" unchecked"));
+}
+
+void MainWindow::OnRadio(int id)
+{
+    auto item = this->menu.Item(id);
+    this->bar.Text(L"Item" + std::to_wstring(id - ID_MENU_ITEM0) + L" is radio selected");
 }
