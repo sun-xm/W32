@@ -2,7 +2,7 @@
 #include "resource.h"
 
 #define REGISTER(id)    RegisterCommand(id, [this]{ this->OnCheck(id); return true; })
-#define RADIO(first, last, id) RegisterCommand(id, [this]{ auto radio = this->menu.RadioMenu(first, last); radio.Check(id); this->OnRadio(radio.GetChecked()); return true; })
+#define RADIO(first, last, id) RegisterCommand(id, [this]{ auto radio = this->menu.RadioItems(first, last); radio.Check(id); this->OnRadio(radio.GetChecked()); return true; })
 
 bool MainWindow::OnCreated()
 {
