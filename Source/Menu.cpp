@@ -56,25 +56,25 @@ MenuItem::operator bool() const
 }
 
 
-RadioMenu::RadioMenu() : menu(nullptr), first(0), last(0)
+RadioItems::RadioItems() : menu(nullptr), first(0), last(0)
 {
 }
 
-RadioMenu::RadioMenu(HMENU menu, UINT first, UINT last) : menu(menu), first(first), last(last)
+RadioItems::RadioItems(HMENU menu, UINT first, UINT last) : menu(menu), first(first), last(last)
 {
 }
 
-void RadioMenu::Check(UINT id, bool checked)
+void RadioItems::Check(UINT id, bool checked)
 {
     CheckMenuRadioItem(this->menu, this->first, this->last, checked ? id : 0, MF_BYCOMMAND);
 }
 
-void RadioMenu::Uncheck(UINT id)
+void RadioItems::Uncheck(UINT id)
 {
     this->Check(id, false);
 }
 
-UINT RadioMenu::GetChecked() const
+UINT RadioItems::GetChecked() const
 {
     for (UINT id = this->first; id <= this->last; id++)
     {
@@ -151,12 +151,12 @@ Menu Menu::SubMenuByPos(int pos) const
     return Menu(item, this->menu, pos);
 }
 
-RadioMenu Menu::RadioMenu(UINT first, UINT last) const
+RadioItems Menu::RadioItems(UINT first, UINT last) const
 {
     HMENU parent;
     int pos;
     auto menu = Search(this->parent, this->menu, first, 0, parent, pos);
-    return ::RadioMenu(menu, first, last);
+    return ::RadioItems(menu, first, last);
 }
 
 MenuItem Menu::Item(UINT id) const

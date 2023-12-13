@@ -24,11 +24,11 @@ private:
     UINT  id;
 };
 
-class RadioMenu
+class RadioItems
 {
 public:
-    RadioMenu();
-    RadioMenu(HMENU menu, UINT first, UINT last);
+    RadioItems();
+    RadioItems(HMENU menu, UINT first, UINT last);
 
     void Check(UINT id, bool checked = true);
     void Uncheck(UINT id);
@@ -57,7 +57,7 @@ public:
     Menu SubMenuContains(UINT id) const;
     Menu SubMenuByPos(int pos) const;
 
-    RadioMenu RadioMenu(UINT first, UINT last) const;
+    RadioItems RadioItems(UINT first, UINT last) const;
 
     MenuItem Item(UINT id) const;
 
