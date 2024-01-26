@@ -12,13 +12,13 @@ public:
 
     operator HINSTANCE();
 
-    int Run(Dialog&, int);
-    int Run(Window&, int);
+    int Run(Dialog&, int, bool isDialog = true);
+    int Run(Window&, int, bool isDialog = false);
 
     static Application& Instance();
     static HACCEL Accel();
 
-    static int MessageLoop(HWND hWnd, HACCEL hAcc);
+    static int MessageLoop(HWND hWnd, HACCEL hAcc, bool isDialog);
 
 protected:
     HINSTANCE hinst;

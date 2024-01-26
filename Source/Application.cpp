@@ -20,7 +20,7 @@ Application::operator HINSTANCE()
     return this->hinst;
 }
 
-int Application::Run(Dialog& dialog, int nCmdShow)
+int Application::Run(Dialog& dialog, int nCmdShow, bool isDialog)
 {
     if (!dialog.Create(nullptr, this->hinst))
     {
@@ -30,10 +30,10 @@ int Application::Run(Dialog& dialog, int nCmdShow)
     dialog.StyleEx(dialog.StyleEx() | WS_EX_DLGMODALFRAME);
     ShowWindow(dialog, nCmdShow);
 
-    return Application::MessageLoop(dialog, Application::Accel());
+    return Application::MessageLoop(dialog, Application::Accel(), isDialog);
 }
 
-int Application::Run(Window& window, int nCmdShow)
+int Application::Run(Window& window, int nCmdShow, bool isDialog)
 {
     if (!window.Create(0, WS_OVERLAPPEDWINDOW, 0, this->hinst))
     {
@@ -42,7 +42,7 @@ int Application::Run(Window& window, int nCmdShow)
 
     ShowWindow(window, nCmdShow);
 
-    return MessageLoop(window, Application::Accel());
+    return MessageLoop(window, Application::Accel(), isDialog);
 }
 
 Application& Application::Instance()
@@ -55,7 +55,7 @@ HACCEL Application::Accel()
     return instance->accel;
 }
 
-int Application::MessageLoop(HWND hWnd, HACCEL hAcc)
+int Application::MessageLoop(HWND hWnd, HACCEL hAcc, bool isDialog)
 {
     MSG  msg = {0};
     BOOL ret;
@@ -67,17 +67,14 @@ int Application::MessageLoop(HWND hWnd, HACCEL hAcc)
             break;
         }
 
-        if (hWnd)
+        if (TranslateAcceleratorW(hWnd, hAcc, &msg))
         {
-            if (hAcc && TranslateAcceleratorW(hWnd, hAcc, &msg))
-            {
-                continue;
-            }
+            continue;
+        }
 
-            if (IsDialogMessageW(hWnd, &msg))
-            {
-                continue;
-            }
+        if (isDialog && IsDialogMessageW(hWnd, &msg))
+        {
+            continue;
         }
 
         TranslateMessage(&msg);
