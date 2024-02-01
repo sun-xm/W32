@@ -137,7 +137,7 @@ bool D2DRenderer::Skew(float angleX, float angleY, float centerX, float centerY)
         return false;
     }
 
-    this->transform = D2D1::Matrix3x2F::Skew(angleX, angleY, D2D1::Point2F(centerX, centerY)) * this->transform;
+    this->transform = this->transform * D2D1::Matrix3x2F::Skew(angleX, angleY, D2D1::Point2F(centerX, centerY));
     this->itf->SetTransform(this->transform);
 
     return true;
@@ -150,7 +150,7 @@ bool D2DRenderer::Scale(float scaleX, float scaleY, float centerX, float centerY
         return false;
     }
 
-    this->transform = D2D1::Matrix3x2F::Scale(D2D1::SizeF(scaleX, scaleY), D2D1::Point2F(centerX, centerY)) * this->transform;
+    this->transform = this->transform * D2D1::Matrix3x2F::Scale(D2D1::SizeF(scaleX, scaleY), D2D1::Point2F(centerX, centerY));
     this->itf->SetTransform(this->transform);
 
     return true;
@@ -163,7 +163,7 @@ bool D2DRenderer::Rotate(float angle, float centerX, float centerY)
         return false;
     }
 
-    this->transform = D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(centerX, centerY)) * this->transform;
+    this->transform = this->transform * D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(centerX, centerY));
     this->itf->SetTransform(this->transform);
 
     return true;
@@ -176,7 +176,7 @@ bool D2DRenderer::Translate(float translateX, float translateY)
         return false;
     }
 
-    this->transform = D2D1::Matrix3x2F::Translation(D2D1::SizeF(translateX, translateY)) * this->transform;
+    this->transform = this->transform * D2D1::Matrix3x2F::Translation(D2D1::SizeF(translateX, translateY));
     this->itf->SetTransform(this->transform);
 
     return true;
@@ -189,7 +189,7 @@ bool D2DRenderer::Transform(const D2D1::Matrix3x2F& transform)
         return false;
     }
 
-    this->transform = transform * this->transform;
+    this->transform = this->transform * transform;
     this->itf->SetTransform(this->transform);
 
     return true;
