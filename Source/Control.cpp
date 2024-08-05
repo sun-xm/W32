@@ -10,9 +10,8 @@ Control::Control(HWND hwnd) : Wnd(hwnd)
 {
 }
 
-Control::~Control()
+Control::Control(const Control& other) : Control(other.hwnd)
 {
-    delete (function<LRESULT(HWND, UINT, WPARAM, LPARAM)>*)this->RemoveProp(L"~");
 }
 
 int Control::ID() const
