@@ -10,10 +10,6 @@ Control::Control(HWND hwnd) : Wnd(hwnd)
 {
 }
 
-Control::Control(const Control& other) : Control(other.hwnd)
-{
-}
-
 int Control::ID() const
 {
     return GetDlgCtrlID(this->hwnd);

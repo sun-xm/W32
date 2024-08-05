@@ -9,7 +9,6 @@ class Control : public Wnd
 public:
     Control();
     Control(HWND);
-    Control(const Control&);
 
     int ID() const;
 
