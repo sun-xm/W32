@@ -11,6 +11,9 @@ public:
 
     bool Create(HWND parent, UINT id, DWORD style = LVS_ALIGNLEFT | WS_BORDER, HINSTANCE instance = nullptr);
 
+    void  ExtendedStyle(DWORD style);
+    DWORD ExtendedStyle() const;
+
     // First column cannot be other than left-aligned. An empty first column can used as walkaround
     int  AddColumn(const std::wstring& title, int width, int format = LVCFMT_LEFT);
     int  InsertColumn(int index, const std::wstring& title, int width, int format = LVCFMT_LEFT);

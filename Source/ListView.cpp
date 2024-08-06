@@ -24,6 +24,16 @@ bool ListView::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
     return !!this->hwnd;
 }
 
+void ListView::ExtendedStyle(DWORD style)
+{
+    ListView_SetExtendedListViewStyle(this->hwnd, style);
+}
+
+DWORD ListView::ExtendedStyle() const
+{
+    return ListView_GetExtendedListViewStyle(this->hwnd);
+}
+
 int ListView::AddColumn(const wstring& title, int width, int format)
 {
     return this->InsertColumn(this->ColumnCount(), title, width, format);
