@@ -152,3 +152,52 @@ wstring ListView::Text(int index, int column) const
     item.iSubItem = column;
     return ListView_GetItem(this->hwnd, &item) ? wstring(item.pszText) : wstring();
 }
+
+int ListView::Selection() const
+{
+    auto count = this->Count();
+    for (int i = 0; i < count; i++)
+    {
+        if (ListView_GetItemState(this->hwnd, i, LVIS_SELECTED) & LVIS_SELECTED)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+vector<int> ListView::Selections() const
+{
+    vector<int> selections;
+    auto count = this->Count();
+    for (int i = 0; i < count; i++)
+    {
+        if (ListView_GetItemState(this->hwnd, i, LVIS_SELECTED) & LVIS_SELECTED)
+        {
+            selections.push_back(i);
+        }
+    }
+    return selections;
+}
+
+bool ListView::Select(int index)
+{
+    LVITEMW item;
+    item.stateMask = LVIS_SELECTED;
+    item.state = LVIS_SELECTED;
+    return this->Send(LVM_SETITEMSTATE, (WPARAM)index, (LPARAM)&item) ? true : false;
+}
+
+bool ListView::Deselect(int index)
+{
+    LVITEMW item;
+    item.stateMask = LVIS_SELECTED;
+    item.state = 0;
+    return this->Send(LVM_SETITEMSTATE, (WPARAM)index, (LPARAM)&item) ? true : false;
+}
+
+void ListView::ClearSelection()
+{
+    this->Deselect(-1);
+}

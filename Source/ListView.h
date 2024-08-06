@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Control.h"
+#include <vector>
 
 class ListView : public Control
 {
@@ -29,4 +30,11 @@ public:
 
     bool  Text(int index, int column, const std::wstring& text);
     std::wstring Text(int index, int column) const;
+
+    int Selection() const;
+    std::vector<int> Selections() const;
+
+    bool Select(int index); // To highlight selected item, need to set focus to ListView control
+    bool Deselect(int index);
+    void ClearSelection();
 };
