@@ -30,9 +30,11 @@ public:
 
     bool  Data(int index, void* data);
     void* Data(int index) const;
+    void* Data() const;
 
     bool  Text(int index, int column, const std::wstring& text);
-    std::wstring Text(int index, int column) const;
+    std::wstring Text(int index, int column = 0) const;
+    std::wstring Text() const;
 
     int Selection() const;
     std::vector<int> Selections() const;

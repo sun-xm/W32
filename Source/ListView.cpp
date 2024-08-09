@@ -144,6 +144,12 @@ void* ListView::Data(int index) const
     return ListView_GetItem(this->hwnd, &item) ? (void*)item.lParam : nullptr;
 }
 
+void* ListView::Data() const
+{
+    auto index = this->Selection();
+    return index < 0 ? nullptr : this->Data(index);
+}
+
 bool ListView::Text(int index, int column, const wstring& text)
 {
     LVITEMW item;
@@ -161,6 +167,12 @@ wstring ListView::Text(int index, int column) const
     item.iItem =  index;
     item.iSubItem = column;
     return ListView_GetItem(this->hwnd, &item) ? wstring(item.pszText) : wstring();
+}
+
+wstring ListView::Text() const
+{
+    auto index = this->Selection();
+    return index < 0 ? wstring() : this->Text(index, 0);
 }
 
 int ListView::Selection() const
