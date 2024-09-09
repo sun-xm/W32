@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 project(W32)
 
+if(MSVC AND MSVC_VERSION GREATER_EQUAL 1910)
+    add_compile_options(/permissive-)
+endif()
+
 set(CMAKE_CXX_STANDARD 11)
 
 set(SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/Source")

@@ -238,7 +238,7 @@ bool AppDialog::CreateStatus()
     this->RegisterCommand(IDC_STATUS_COMBO, [this]
     {
         auto combo = ComboBox(GetDlgItem(this->status, IDC_STATUS_COMBO));
-        this->Position((int)combo.Data());
+        this->Position((int)(intptr_t)combo.Data());
         return true;
     });
 

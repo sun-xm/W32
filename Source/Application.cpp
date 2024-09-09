@@ -30,7 +30,12 @@ int Application::Run(Dialog& dialog, int nCmdShow, bool isDialog)
     dialog.StyleEx(dialog.StyleEx() | WS_EX_DLGMODALFRAME);
     ShowWindow(dialog, nCmdShow);
 
-    return Application::MessageLoop(dialog, Application::Accel(), isDialog);
+    return MessageLoop(dialog, Application::Accel(), isDialog);
+}
+
+int Application::Run(Dialog&& dialog, int nCmdShow, bool isDialog)
+{
+    return Run((Dialog&)dialog, nCmdShow, isDialog);
 }
 
 int Application::Run(Window& window, int nCmdShow, bool isDialog)
@@ -43,6 +48,11 @@ int Application::Run(Window& window, int nCmdShow, bool isDialog)
     ShowWindow(window, nCmdShow);
 
     return MessageLoop(window, Application::Accel(), isDialog);
+}
+
+int Application::Run(Window&& window, int nCmdShow, bool isDialog)
+{
+    return Run((Window&)window, nCmdShow, isDialog);
 }
 
 Application& Application::Instance()

@@ -12,8 +12,10 @@ public:
 
     operator HINSTANCE();
 
-    int Run(Dialog&, int, bool isDialog = true);
-    int Run(Window&, int, bool isDialog = false);
+    int Run(Dialog&,  int, bool isDialog = true);
+    int Run(Dialog&&, int, bool isDialog = true);
+    int Run(Window&,  int, bool isDialog = false);
+    int Run(Window&&, int, bool isDialog = false);
 
     static Application& Instance();
     static HACCEL Accel();
