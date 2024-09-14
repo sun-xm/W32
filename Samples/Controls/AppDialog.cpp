@@ -33,7 +33,7 @@ bool AppDialog::OnCreated()
 
     this->Item(IDC_ECHO).SetFont(this->font);
 
-    auto spinner = (Spinner&)this->Item(IDC_SPIN);
+    auto spinner = Spinner(this->Item(IDC_SPIN));
     spinner.Buddy(this->Item(IDC_EDIT));
     spinner.Range(0, 100);
     spinner.SetPos(50);
@@ -43,7 +43,7 @@ bool AppDialog::OnCreated()
         if (EN_CHANGE == HIWORD(this->wparam))
         {
             int pos;
-            if (((Spinner&)this->Item(IDC_SPIN)).GetPos(pos))
+            if (Spinner(this->Item(IDC_SPIN)).GetPos(pos))
             {
                 this->Position(pos);
             }
@@ -52,14 +52,14 @@ bool AppDialog::OnCreated()
         return true;
     });
 
-    auto combo = (ComboBox&)this->Item(IDC_COMBO);
+    auto combo = ComboBox(this->Item(IDC_COMBO));
     combo.Add(L"Hello");
     combo.Add(L"World");
     this->RegisterCommand(IDC_COMBO, [this]
     {
         if (CBN_SELCHANGE == HIWORD(this->wparam))
         {
-            auto combo = (ComboBox&)this->Item(IDC_COMBO);
+            auto combo = ComboBox(this->Item(IDC_COMBO));
             if (combo.Selection() >= 0)
             {
                 this->Item(IDC_ECHO).Text(combo.Text());
@@ -70,15 +70,15 @@ bool AppDialog::OnCreated()
         return true;
     });
 
-    auto progress = (ProgressBar&)this->Item(IDC_PROGRESS);
+    auto progress = ProgressBar(this->Item(IDC_PROGRESS));
     progress.Marquee(true);
 
-    ((Slider&)this->Item(IDC_SLIDER)).Position(50);
+    Slider(this->Item(IDC_SLIDER)).Position(50);
     this->RegisterMessage(WM_HSCROLL, [this]
     {
         if ((LPARAM)GetDlgItem(*this, IDC_SLIDER) == this->lparam)
         {
-            this->Position(((Slider&)this->Item(IDC_SLIDER)).Position());
+            this->Position(Slider(this->Item(IDC_SLIDER)).Position());
             return Handled(true);
         }
 
@@ -90,7 +90,7 @@ bool AppDialog::OnCreated()
         if (BN_CLICKED == HIWORD(this->wparam))
         {
             auto echo = this->Item(IDC_ECHO);
-            auto check = (CheckBox&)this->Item(IDC_CHECK);
+            auto check = CheckBox(this->Item(IDC_CHECK));
 
             if (check.IsChecked())
             {
@@ -119,14 +119,14 @@ bool AppDialog::OnCreated()
         return true;
     });
 
-    auto list = (ListBox&)this->Item(IDC_LIST);
+    auto list = ListBox(this->Item(IDC_LIST));
     list.Add(L"Hello");
     list.Add(L"World");
     this->RegisterCommand(IDC_LIST, [this]
     {
         if (LBN_SELCHANGE == HIWORD(this->wparam))
         {
-            auto list = (ListBox&)this->Item(IDC_LIST);
+            auto list = ListBox(this->Item(IDC_LIST));
             if (list.Selection() >= 0)
             {
                 this->Item(IDC_ECHO).Text(list.Text());
@@ -266,14 +266,14 @@ void AppDialog::Position(int pos)
     this->Item(IDC_ECHO).Text(text);
     this->status.Text(text);
 
-    auto progress = (ProgressBar&)this->Item(IDC_PROGRESS);
+    auto progress = ProgressBar(this->Item(IDC_PROGRESS));
     if (PBS_MARQUEE & progress.Style())
     {
         progress.Marquee(false);
     }
     progress.Position(pos);
 
-    ((Spinner&)this->Item(IDC_SPIN)).SetPos(pos);
-    ((Slider&)this->Item(IDC_SLIDER)).Position(pos);
-    ((ProgressBar&)Control(GetDlgItem(this->status, IDC_STATUS_PROGRESS))).Position(pos);
+    Spinner(this->Item(IDC_SPIN)).SetPos(pos);
+    Slider(this->Item(IDC_SLIDER)).Position(pos);
+    ProgressBar(Control(GetDlgItem(this->status, IDC_STATUS_PROGRESS))).Position(pos);
 }

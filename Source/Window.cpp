@@ -92,7 +92,7 @@ void Window::OnClose()
 void Window::OnPaint()
 {
     PAINTSTRUCT ps;
-    auto hdc = BeginPaint(this->hwnd, &ps);
+    BeginPaint(this->hwnd, &ps);
     EndPaint(this->hwnd, &ps);
 }
 

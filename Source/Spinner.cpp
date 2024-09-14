@@ -30,7 +30,6 @@ bool Spinner::GetPos(int& pos) const
 {
     BOOL success;
     pos = (int)this->Send(UDM_GETPOS32, 0, (LPARAM)&success);
-    auto err = GetLastError();
     return success ? false : true;
 }
 

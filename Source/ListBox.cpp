@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ListBox.h"
 
 using namespace std;

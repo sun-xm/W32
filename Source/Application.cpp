@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Dialog.h"
 #include "Window.h"
+#include <stdexcept>
 
 Application* Application::instance = nullptr;
 

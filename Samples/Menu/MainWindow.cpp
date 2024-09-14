@@ -59,6 +59,5 @@ void MainWindow::OnCheck(int id)
 
 void MainWindow::OnRadio(int id)
 {
-    auto item = this->menu.Item(id);
     this->bar.Text(L"Item" + std::to_wstring(id - ID_MENU_ITEM0) + L" is radio selected");
 }

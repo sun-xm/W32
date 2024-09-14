@@ -1,6 +1,7 @@
 #include "D2DRenderer.h"
 #include "Cleanup.h"
 #include <algorithm>
+#include <string>
 #include <vector>
 
 #pragma comment(lib, "d2d1.lib")
@@ -257,7 +258,7 @@ bool D2DRenderer::Draw(const D2DRectangle& rectangle) const
         return false;
     }
 
-    if (((D2D1_ROUNDED_RECT&)rectangle).radiusX || ((D2D1_ROUNDED_RECT&)rectangle).radiusY)
+    if (static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusX || static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusY)
     {
         this->itf->DrawRoundedRectangle(rectangle, this->brush, this->stroke.Width(), this->stroke);
     }
@@ -305,7 +306,7 @@ bool D2DRenderer::Fill(const D2DRectangle& rectangle) const
         return false;
     }
 
-    if (((D2D1_ROUNDED_RECT&)rectangle).radiusX || ((D2D1_ROUNDED_RECT&)rectangle).radiusY)
+    if (static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusX || static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusY)
     {
         this->itf->FillRoundedRectangle(rectangle, this->brush);
     }
