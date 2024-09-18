@@ -62,12 +62,12 @@ public:
         this->rect.radiusY = radiusY;
     }
 
-    operator D2D1_RECT_F() const
+    operator const D2D1_RECT_F&() const
     {
         return this->rect.rect;
     }
 
-    operator D2D1_ROUNDED_RECT() const
+    operator const D2D1_ROUNDED_RECT&() const
     {
         return this->rect;
     }

@@ -258,7 +258,7 @@ bool D2DRenderer::Draw(const D2DRectangle& rectangle) const
         return false;
     }
 
-    if (static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusX || static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusY)
+    if (static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusX > 0 || static_cast<D2D1_ROUNDED_RECT>(rectangle).radiusY > 0)
     {
         this->itf->DrawRoundedRectangle(rectangle, this->brush, this->stroke.Width(), this->stroke);
     }

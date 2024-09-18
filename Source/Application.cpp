@@ -36,7 +36,7 @@ int Application::Run(Dialog& dialog, int nCmdShow, bool isDialog)
 
 int Application::Run(Dialog&& dialog, int nCmdShow, bool isDialog)
 {
-    return Run((Dialog&)dialog, nCmdShow, isDialog);
+    return Run(dialog, nCmdShow, isDialog);
 }
 
 int Application::Run(Window& window, int nCmdShow, bool isDialog)
@@ -53,7 +53,7 @@ int Application::Run(Window& window, int nCmdShow, bool isDialog)
 
 int Application::Run(Window&& window, int nCmdShow, bool isDialog)
 {
-    return Run((Window&)window, nCmdShow, isDialog);
+    return Run(window, nCmdShow, isDialog);
 }
 
 Application& Application::Instance()
