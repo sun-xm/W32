@@ -43,3 +43,13 @@ void Slider::Range(unsigned short min, unsigned short max, bool redraw)
 {
     this->Send(TBM_SETRANGE, redraw ? TRUE : FALSE, (LPARAM)((max << 16) | min));
 }
+
+bool Slider::Tick(int pos)
+{
+    return this->Send(TBM_SETTIC, 0, (LPARAM)pos) ? true : false;
+}
+
+void Slider::TickFreq(int freq)
+{
+    this->Send(TBM_SETTICFREQ, (WPARAM)freq, 0);
+}

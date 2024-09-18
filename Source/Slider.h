@@ -16,4 +16,7 @@ public:
     void Min(int min, bool redraw = true);
     void Max(int max, bool redraw = true);
     void Range(unsigned short min, unsigned short max, bool redraw = true);
+
+    bool Tick(int pos);
+    void TickFreq(int freq);    // TBS_AUTOTICKS is needed
 };
