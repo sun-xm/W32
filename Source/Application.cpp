@@ -3,6 +3,8 @@
 #include "Window.h"
 #include <stdexcept>
 
+using namespace std;
+
 Application* Application::instance = nullptr;
 
 Application::Application(HINSTANCE instance, UINT accelerator) : hinst(instance)
@@ -93,4 +95,42 @@ int Application::MessageLoop(HWND hWnd, HACCEL hAcc, bool isDialog)
     }
 
     return (int)msg.wParam;
+}
+
+bool Application::LoadRCData(const wstring& name, vector<uint8_t>& data)
+{
+    return LoadRCData(instance ? instance->hinst : nullptr, name, data);
+}
+
+bool Application::LoadRCData(HMODULE module, const wstring& name, vector<uint8_t>& data)
+{
+    data.clear();
+
+    auto res = FindResourceW(module, name.c_str(), MAKEINTRESOURCEW(10));
+    if (!res)
+    {
+        return false;
+    }
+
+    auto size = SizeofResource(module, res);
+    if (!size)
+    {
+        return 0 == GetLastError();
+    }
+
+    auto gmem = LoadResource(module, res);
+    if (!gmem)
+    {
+        return false;
+    }
+
+    auto addr = LockResource(gmem);
+    if (!addr)
+    {
+        return false;
+    }
+
+    data.assign((uint8_t*)addr, (uint8_t*)addr + size);
+
+    return true;
 }

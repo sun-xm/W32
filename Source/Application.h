@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Windows.h>
+#include <string>
+#include <vector>
 
 class Dialog;
 class Window;
@@ -21,6 +23,9 @@ public:
     static HACCEL Accel();
 
     static int MessageLoop(HWND hWnd, HACCEL hAcc, bool isDialog);
+
+    static bool LoadRCData(const std::wstring& name, std::vector<uint8_t>& data);
+    static bool LoadRCData(HMODULE modle, const std::wstring& name, std::vector<uint8_t>& data);
 
 protected:
     HINSTANCE hinst;
