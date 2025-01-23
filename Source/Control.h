@@ -21,5 +21,5 @@ public:
     int ID() const;
 
     void Subclass(const WNDFUNC&);
-    LRESULT DefWndProc(HWND, UINT, WPARAM, LPARAM);
+    LRESULT DefWndProc(HWND, UINT, WPARAM, LPARAM) const;
 };
