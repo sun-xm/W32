@@ -261,6 +261,21 @@ void Wnd::StyleEx(DWORD style)
     SetWindowPos(this->hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_DRAWFRAME);
 }
 
+bool Wnd::SetProp(const wchar_t* name, HANDLE data)
+{
+    return ::SetPropW(this->hwnd, name, data) ? true : false;
+}
+
+HANDLE Wnd::GetProp(const wchar_t* name)
+{
+    return ::GetPropW(this->hwnd, name);
+}
+
+HANDLE Wnd::RemoveProp(const wchar_t* name)
+{
+    return ::RemovePropW(this->hwnd, name);
+}
+
 void Wnd::ClipChildren(bool clip)
 {
     if (clip)

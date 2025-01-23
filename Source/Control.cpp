@@ -1,12 +1,14 @@
 #include "Control.h"
+#include "Cleanup.h"
 
 using namespace std;
+using WndProcFn = function<LRESULT(HWND, UINT, WPARAM, LPARAM)>;
 
-Control::Control() : Wnd()
+Control::Control() : Wnd(), defProc(0)
 {
 }
 
-Control::Control(HWND hwnd) : Wnd(hwnd)
+Control::Control(HWND hwnd) : Wnd(hwnd), defProc(0)
 {
 }
 
@@ -15,95 +17,48 @@ int Control::ID() const
     return GetDlgCtrlID(this->hwnd);
 }
 
-bool Control::SetProp(const wchar_t* name, HANDLE data)
+void Control::Subclass(const WndProcFn& proc)
 {
-    return ::SetPropW(this->hwnd, name, data) ? true : false;
-}
+    const static auto wndproc = (WNDPROC)[](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)->LRESULT
+    {
+        auto func = GetWindowLongPtrW(hWnd, GWLP_USERDATA);
+        ONCLEANUP(func, [=]
+        {
+            if (WM_NCDESTROY == uMsg)
+            {
+                delete (WndProcFn*)func;
+            }
+        });
+        return (*(WndProcFn*)func)(hWnd, uMsg, wParam, lParam);
+    };
 
-HANDLE Control::GetProp(const wchar_t* name)
-{
-    return ::GetPropW(this->hwnd, name);
-}
-
-HANDLE Control::RemoveProp(const wchar_t* name)
-{
-    return ::RemovePropW(this->hwnd, name);
-}
-
-void Control::Subclass(const function<LRESULT(HWND, UINT, WPARAM, LPARAM)>& subproc)
-{
     if (!this->hwnd)
     {
         return;
     }
 
-    auto proc = (WNDPROC)[](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)->LRESULT
+    if (this->defProc)
     {
-        auto func = ::GetPropW(hWnd, L"~");
-        if (func)
+        delete (WndProcFn*)GetWindowLongPtrW(this->hwnd, GWLP_USERDATA);
+        SetWindowLongPtrW(this->hwnd, GWLP_USERDATA, 0);
+
+        if (!proc)
         {
-            return (*(function<LRESULT(HWND, UINT, WPARAM, LPARAM)>*)func)(hWnd, uMsg, wParam, lParam);
+            SetWindowLongPtrW(this->hwnd, GWLP_WNDPROC, (LONG_PTR)this->defProc);
+            this->defProc = nullptr;
+            return;
         }
-
-        return Control::DefWndProc(hWnd, uMsg, wParam, lParam);
-    };
-
-    auto def = SetWindowLongPtrW(this->hwnd, GWLP_WNDPROC, (LONG_PTR)proc);
-    if (!GetWindowLongPtrW(this->hwnd, GWLP_USERDATA))
+    }
+    else
     {
-        SetWindowLongPtrW(this->hwnd, GWLP_USERDATA, def);
+        this->defProc = (WNDPROC)GetWindowLongPtrW(this->hwnd, GWLP_WNDPROC);
+        SetWindowLongPtrW(this->hwnd, GWLP_WNDPROC, (LONG_PTR)wndproc);
     }
 
-    delete (function<LRESULT(HWND, UINT, WPARAM, LPARAM)>*)this->GetProp(L"~");
-    this->SetProp(L"~", new function<LRESULT(HWND, UINT, WPARAM, LPARAM)>([this, subproc](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)->LRESULT
-    {
-        function<LRESULT(HWND, UINT, WPARAM, LPARAM)>* func = nullptr;
-        if (WM_DESTROY == uMsg)
-        {
-            func = (decltype(func))this->RemoveProp(L"~");
-        }
-
-        LRESULT result;
-
-        if (subproc)
-        {
-            result = subproc(hWnd, uMsg, wParam, lParam);
-        }
-        else
-        {
-            result = Control::DefWndProc(hWnd, uMsg, wParam, lParam);
-        }
-
-        if (WM_DESTROY == uMsg)
-        {
-            this->hwnd = 0;
-            delete func;
-        }
-
-        return result;
-    }));
-}
-
-WNDPROC Control::Subclass(Control& ctrl, WNDPROC proc)
-{
-    if (!ctrl || !proc)
-    {
-        return nullptr;
-    }
-
-    delete (function<LRESULT(HWND, UINT, WPARAM, LPARAM)>*)::RemovePropW(ctrl, L"~");
-
-    auto def = SetWindowLongPtrW(ctrl, GWLP_WNDPROC, (LONG_PTR)proc);
-
-    if (!GetWindowLongPtrW(ctrl, GWLP_USERDATA))
-    {
-        SetWindowLongPtrW(ctrl, GWLP_USERDATA, def);
-    }
-
-    return (WNDPROC)def;
+    SetWindowLongPtrW(this->hwnd, GWLP_USERDATA, (LONG_PTR)new WndProcFn(proc));
 }
 
 LRESULT Control::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    return ((WNDPROC)GetWindowLongPtrW(hWnd, GWLP_USERDATA))(hWnd, uMsg, wParam, lParam);
+    return CallWindowProcW(this->defProc, hWnd, uMsg, wParam, lParam);
 }

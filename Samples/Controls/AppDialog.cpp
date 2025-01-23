@@ -187,7 +187,7 @@ bool AppDialog::CreateStatus()
             }
         }
 
-        return Control::DefWndProc(hWnd, uMsg, wParam, lParam);
+        return this->status.DefWndProc(hWnd, uMsg, wParam, lParam);
     });
 
     Button button;

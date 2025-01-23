@@ -60,6 +60,10 @@ public:
     void  Style(DWORD style);
     void  StyleEx(DWORD style);
 
+    bool   SetProp(const wchar_t* name, HANDLE data);
+    HANDLE GetProp(const wchar_t* name);
+    HANDLE RemoveProp(const wchar_t* name);
+
     void ClipChildren(bool clip = true);
     void ClipSiblings(bool clip = true);
 

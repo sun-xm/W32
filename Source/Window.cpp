@@ -217,11 +217,6 @@ LRESULT Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
     }
 
-    return this->DefWndProc(hWnd, uMsg, wParam, lParam);
-}
-
-LRESULT Window::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
     return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
