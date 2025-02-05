@@ -25,6 +25,8 @@ void Control::Subclass(const WNDFUNC& proc)
         {
             if (WM_NCDESTROY == uMsg)
             {
+                SetWindowLongPtrW(hWnd, GWLP_WNDPROC, (LONG_PTR)data->defproc);
+                SetWindowLongPtrW(hWnd, GWLP_USERDATA, 0);
                 delete (Subdata*)data;
             }
         });
@@ -59,8 +61,8 @@ void Control::Subclass(const WNDFUNC& proc)
     SetWindowLongPtrW(this->hwnd, GWLP_WNDPROC,  (LONG_PTR)wndproc);
 }
 
-LRESULT Control::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+LRESULT Control::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    auto defproc = ((Subdata*)GetWindowLongPtrW(this->hwnd, GWLP_USERDATA))->defproc;
+    auto defproc = ((Subdata*)GetWindowLongPtrW(hWnd, GWLP_USERDATA))->defproc;
     return CallWindowProcW(defproc, hWnd, uMsg, wParam, lParam);
 }
