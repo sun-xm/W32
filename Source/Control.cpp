@@ -1,5 +1,4 @@
 #include "Control.h"
-#include "Cleanup.h"
 
 using namespace std;
 
@@ -20,17 +19,7 @@ void Control::Subclass(const WNDFUNC& proc)
 {
     const static auto wndproc = (WNDPROC)[](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)->LRESULT
     {
-        auto data = (Subdata*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
-        ONCLEANUP(data, [=]
-        {
-            if (WM_NCDESTROY == uMsg)
-            {
-                SetWindowLongPtrW(hWnd, GWLP_WNDPROC, (LONG_PTR)data->defproc);
-                SetWindowLongPtrW(hWnd, GWLP_USERDATA, 0);
-                delete (Subdata*)data;
-            }
-        });
-        return data->subproc(hWnd, uMsg, wParam, lParam);
+        return ((Subdata*)GetWindowLongPtrW(hWnd, GWLP_USERDATA))->subproc(hWnd, uMsg, wParam, lParam);
     };
 
     if (!this->hwnd)
@@ -63,6 +52,7 @@ void Control::Subclass(const WNDFUNC& proc)
 
 LRESULT Control::DefWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    auto defproc = ((Subdata*)GetWindowLongPtrW(hWnd, GWLP_USERDATA))->defproc;
-    return CallWindowProcW(defproc, hWnd, uMsg, wParam, lParam);
+    auto data = (Subdata*)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
+    auto proc = data ? data->defproc : (WNDPROC)GetWindowLongPtrW(hWnd, GWLP_WNDPROC);
+    return CallWindowProcW(proc, hWnd, uMsg, wParam, lParam);
 }
