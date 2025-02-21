@@ -16,9 +16,7 @@ bool MainDialog::OnCreated()
     TreeView tree(this->Item(IDC_TREE));
     auto hello = tree.Add(L"Hello");
     auto world = tree.Add(L"World", hello);
-    auto wahah = tree.Add(L"wahah", (void*)"wahaha", hello);
-
-    auto text = (char*)tree.Data(wahah);
+    world.Text(L"whaha");
 
     return true;
 }

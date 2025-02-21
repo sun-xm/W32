@@ -1,6 +1,63 @@
 #include "TreeView.h"
+#include "Cleanup.h"
 
 using namespace std;
+
+TreeViewItem::TreeViewItem(HWND tree, HTREEITEM item) : tree(tree), item(item)
+{
+}
+
+bool TreeViewItem::Text(const wstring& text)
+{
+    TVITEMW tvi;
+    tvi.mask = TVIF_TEXT | TVIF_HANDLE;
+    tvi.hItem = this->item;
+    tvi.pszText = (LPWSTR)text.c_str();
+    return SendMessageW(this->tree, TVM_SETITEMW, 0, (LPARAM)&tvi) ? true : false;
+}
+
+wstring TreeViewItem::Text(size_t maxLength) const
+{
+    maxLength++;
+    auto buf = new wchar_t[maxLength];
+    ONCLEANUP(buf, [buf]{ delete[] buf; });
+
+    TVITEMW tvi;
+    tvi.mask = TVIF_TEXT | TVIF_HANDLE;
+    tvi.hItem = this->item;
+    tvi.pszText = buf;
+    tvi.cchTextMax = (int)maxLength;
+
+    if (!SendMessageW(this->tree, TVM_GETITEM, 0, (LPARAM)&tvi))
+    {
+        return wstring();
+    }
+
+    return wstring(buf);
+}
+
+bool TreeViewItem::Data(void* data)
+{
+    TVITEMW tvi;
+    tvi.mask = TVIF_PARAM  | TVIF_HANDLE;
+    tvi.hItem = item;
+    tvi.lParam = (LPARAM)data;
+    return SendMessageW(this->tree, TVM_SETITEMW, 0, (LPARAM)&tvi) ? true : false;
+}
+
+void* TreeViewItem::Data() const
+{
+    TVITEMW tvi;
+    tvi.mask = TVIF_PARAM  | TVIF_HANDLE;
+    tvi.hItem = item;
+    if (!SendMessageW(this->tree, TVM_GETITEMW, 0, (LPARAM)&tvi))
+    {
+        return nullptr;
+    }
+
+    return (void*)tvi.lParam;
+}
+
 
 TreeView::TreeView() : Control()
 {
@@ -24,27 +81,25 @@ bool TreeView::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
     return !!this->hwnd;
 }
 
-HTREEITEM TreeView::Add(const wstring& text, HTREEITEM parent, HTREEITEM after)
+TreeViewItem TreeView::Add(const wstring& text, HTREEITEM parent, HTREEITEM after)
 {
     TVINSERTSTRUCTW insert = {0};
     insert.item.mask = TVIF_TEXT;
     insert.item.pszText = (wchar_t*)text.c_str();
-    insert.item.cchTextMax = (int)text.length() + 1;
     insert.hParent = parent;
     insert.hInsertAfter = after;
-    return (HTREEITEM)this->Send(TVM_INSERTITEMW, 0, (LPARAM)&insert);
+    return TreeViewItem(this->hwnd, (HTREEITEM)this->Send(TVM_INSERTITEMW, 0, (LPARAM)&insert));
 }
 
-HTREEITEM TreeView::Add(const wstring& text, void* data, HTREEITEM parent, HTREEITEM after)
+TreeViewItem TreeView::Add(const wstring& text, void* data, HTREEITEM parent, HTREEITEM after)
 {
     TVINSERTSTRUCTW insert = {0};
     insert.item.mask = TVIF_TEXT | TVIF_PARAM;
     insert.item.pszText = (wchar_t*)text.c_str();
-    insert.item.cchTextMax = (int)text.length() + 1;
     insert.item.lParam = (LPARAM)data;
     insert.hParent = parent;
     insert.hInsertAfter = after;
-    return (HTREEITEM)this->Send(TVM_INSERTITEMW, 0, (LPARAM)&insert);
+    return TreeViewItem(this->hwnd, (HTREEITEM)this->Send(TVM_INSERTITEMW, 0, (LPARAM)&insert));
 }
 
 void TreeView::Remove(HTREEITEM item)
@@ -55,22 +110,4 @@ void TreeView::Remove(HTREEITEM item)
 void TreeView::Clear()
 {
     this->Remove(TVI_ROOT);
-}
-
-bool TreeView::Data(HTREEITEM item, void* data)
-{
-    TVITEMW tvi;
-    tvi.mask = TVIF_PARAM;
-    tvi.hItem = item;
-    tvi.lParam = (LPARAM)data;
-    return this->Send(TVM_SETITEMW, 0, (LPARAM)&tvi) ? true : false;
-}
-
-void* TreeView::Data(HTREEITEM item) const
-{
-    TVITEMW tvi = {0};
-    tvi.mask = TVIF_PARAM;
-    tvi.hItem = item;
-    this->Send(TVM_GETITEMW, 0, (LPARAM)&tvi);
-    return (void*)tvi.lParam;
 }
