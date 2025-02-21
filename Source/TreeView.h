@@ -16,6 +16,7 @@ public:
 
     bool EnumerateChild(const std::function<bool(TreeViewItem& item)>&); // Return true if item found in callback function then enumeration stops
                                                                          // EnumerateChild() returns true if any callback returns true
+    bool EnumerateChild(const std::function<bool(const TreeViewItem& item)>&) const;
 
     operator HTREEITEM() const
     {

@@ -83,6 +83,31 @@ bool TreeViewItem::EnumerateChild(const function<bool(TreeViewItem&)>& onItem)
     return false;
 }
 
+bool TreeViewItem::EnumerateChild(const function<bool(const TreeViewItem&)>& onItem) const
+{
+    if (onItem)
+    {
+        auto child = TreeView_GetChild(this->tree, this->item);
+        if (!child)
+        {
+            return false;
+        }
+
+        bool stop;
+        do
+        {
+            auto item = TreeViewItem(this->tree, child);
+            stop = onItem(item);
+            child = stop ? nullptr : TreeView_GetNextSibling(this->tree, child);
+
+        } while (child);
+
+        return stop;
+    }
+
+    return false;
+}
+
 
 TreeView::TreeView() : Control()
 {

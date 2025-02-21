@@ -20,13 +20,14 @@ bool MainDialog::OnCreated()
     auto hello = tree.Add(L"Hello");
     auto world = tree.Add(L"World", hello);
 
-    function<bool(TreeViewItem&)> onItem = [&](TreeViewItem& item)
+    function<bool(const TreeViewItem&)> onItem = [&](const TreeViewItem& item)
     {
         wcout << item.Text() << endl;
         return item.EnumerateChild(onItem);
     };
 
-    tree.Root().EnumerateChild(onItem);
+    const auto& root = tree.Root();
+    root.EnumerateChild(onItem);
 
     return true;
 }
