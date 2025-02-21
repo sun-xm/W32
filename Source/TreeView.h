@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Control.h"
+#include <functional>
 
 class TreeViewItem
 {
@@ -12,6 +13,9 @@ public:
 
     bool  Data(void* data);
     void* Data() const;
+
+    bool EnumerateChild(const std::function<bool(TreeViewItem& item)>&); // Return true if item found in callback function then enumeration stops
+                                                                         // EnumerateChild() returns true if any callback returns true
 
     operator HTREEITEM() const
     {
@@ -35,4 +39,6 @@ public:
     TreeViewItem Add(const std::wstring& text, void* data, HTREEITEM parent = TVI_ROOT, HTREEITEM after = TVI_LAST);
     void Remove(HTREEITEM item);
     void Clear();
+
+    TreeViewItem Root() const;
 };

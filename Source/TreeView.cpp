@@ -58,6 +58,31 @@ void* TreeViewItem::Data() const
     return (void*)tvi.lParam;
 }
 
+bool TreeViewItem::EnumerateChild(const function<bool(TreeViewItem&)>& onItem)
+{
+    if (onItem)
+    {
+        auto child = TreeView_GetChild(this->tree, this->item);
+        if (!child)
+        {
+            return false;
+        }
+
+        bool stop;
+        do
+        {
+            auto item = TreeViewItem(this->tree, child);
+            stop = onItem(item);
+            child = stop ? nullptr : TreeView_GetNextSibling(this->tree, child);
+
+        } while (child);
+
+        return stop;
+    }
+
+    return false;
+}
+
 
 TreeView::TreeView() : Control()
 {
@@ -110,4 +135,9 @@ void TreeView::Remove(HTREEITEM item)
 void TreeView::Clear()
 {
     this->Remove(TVI_ROOT);
+}
+
+TreeViewItem TreeView::Root() const
+{
+    return TreeViewItem(this->hwnd, TVI_ROOT);
 }
