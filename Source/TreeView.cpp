@@ -3,6 +3,10 @@
 
 using namespace std;
 
+TreeViewItem::TreeViewItem() : tree(nullptr), item(nullptr)
+{
+}
+
 TreeViewItem::TreeViewItem(HWND tree, HTREEITEM item) : tree(tree), item(item)
 {
 }
@@ -58,11 +62,16 @@ void* TreeViewItem::Data() const
     return (void*)tvi.lParam;
 }
 
+void TreeViewItem::Select()
+{
+    SendMessageW(this->tree, TVM_SELECTITEM, TVGN_CARET, (LPARAM)this->item);
+}
+
 bool TreeViewItem::EnumerateChild(const function<bool(TreeViewItem&)>& onItem)
 {
     if (onItem)
     {
-        auto child = TreeView_GetChild(this->tree, this->item);
+        auto child = (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_CHILD, (LPARAM)this->item);
         if (!child)
         {
             return false;
@@ -73,7 +82,7 @@ bool TreeViewItem::EnumerateChild(const function<bool(TreeViewItem&)>& onItem)
         {
             auto item = TreeViewItem(this->tree, child);
             stop = onItem(item);
-            child = stop ? nullptr : TreeView_GetNextSibling(this->tree, child);
+            child = stop ? nullptr : (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_NEXT, (LPARAM)child);
 
         } while (child);
 
@@ -87,7 +96,7 @@ bool TreeViewItem::EnumerateChild(const function<bool(const TreeViewItem&)>& onI
 {
     if (onItem)
     {
-        auto child = TreeView_GetChild(this->tree, this->item);
+        auto child = (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_CHILD, (LPARAM)this->item);
         if (!child)
         {
             return false;
@@ -98,7 +107,7 @@ bool TreeViewItem::EnumerateChild(const function<bool(const TreeViewItem&)>& onI
         {
             auto item = TreeViewItem(this->tree, child);
             stop = onItem(item);
-            child = stop ? nullptr : TreeView_GetNextSibling(this->tree, child);
+            child = stop ? nullptr : (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_NEXT, (LPARAM)child);
 
         } while (child);
 
@@ -165,4 +174,14 @@ void TreeView::Clear()
 TreeViewItem TreeView::Root() const
 {
     return TreeViewItem(this->hwnd, TVI_ROOT);
+}
+
+TreeViewItem TreeView::Selection() const
+{
+    return TreeViewItem(this->hwnd, (HTREEITEM)this->Send(TVM_GETNEXTITEM, TVGN_CARET, 0));
+}
+
+void TreeView::ClearSelection()
+{
+    this->Send(TVM_SELECTITEM, TVGN_CARET, 0);
 }

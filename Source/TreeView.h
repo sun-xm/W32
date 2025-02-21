@@ -6,6 +6,7 @@
 class TreeViewItem
 {
 public:
+    TreeViewItem();
     TreeViewItem(HWND tree, HTREEITEM item);
 
     bool Text(const std::wstring& text);
@@ -14,6 +15,8 @@ public:
     bool  Data(void* data);
     void* Data() const;
 
+    void Select();
+
     bool EnumerateChild(const std::function<bool(TreeViewItem& item)>&); // Return true if item found in callback function then enumeration stops
                                                                          // EnumerateChild() returns true if any callback returns true
     bool EnumerateChild(const std::function<bool(const TreeViewItem& item)>&) const;
@@ -21,6 +24,11 @@ public:
     operator HTREEITEM() const
     {
         return this->item;
+    }
+
+    operator bool() const
+    {
+        return this->tree && this->item;
     }
 
 private:
@@ -42,4 +50,7 @@ public:
     void Clear();
 
     TreeViewItem Root() const;
+    TreeViewItem Selection() const;
+
+    void ClearSelection();
 };
