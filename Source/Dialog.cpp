@@ -91,6 +91,7 @@ int Dialog::DoModal(HWND parent, int x, int y, HINSTANCE instance, HACCEL accele
     }
 
     EnableWindow(parent, TRUE);
+    SetForegroundWindow(parent);
 
     return (int)msg.wParam;
 }
