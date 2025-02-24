@@ -32,16 +32,38 @@ bool Dialog::Create(HWND parent, HINSTANCE instance)
     return !!this->hwnd;
 }
 
-int Dialog::DoModal(HACCEL hacc)
+int Dialog::DoModal(HWND parent, int x, int y, HINSTANCE instance, HACCEL accelerator)
 {
-    if (this->Parent())
+    if (!this->Create(parent, instance))
     {
-        this->Parent().Disable();
+        return -1;
     }
 
-    auto styleEx = this->StyleEx();
-    this->StyleEx(styleEx | WS_EX_DLGMODALFRAME);
+    EnableWindow(parent, FALSE);
 
+    RECT prect;
+    GetWindowRect(parent, &prect);
+
+    RECT drect;
+    GetWindowRect(this->hwnd, &drect);
+
+    if (CW_USEDEFAULT == x)
+    {
+        auto pw = prect.right - prect.left;
+        auto dw = drect.right - drect.left;
+        x =  (pw - dw) / 2 + prect.left;
+    }
+    if (CW_USEDEFAULT == y)
+    {
+        auto ph = prect.bottom - prect.top;
+        auto dh = drect.bottom - drect.top;
+        y = (ph - dh) / 2 + prect.top;
+    }
+
+    x = x < 0 ? 0 : x;
+    y = y < 0 ? 0 : y;
+
+    this->MoveTo(x, y);
     this->Show();
 
     MSG  msg = {0};
@@ -54,7 +76,7 @@ int Dialog::DoModal(HACCEL hacc)
             break;
         }
 
-        if (TranslateAcceleratorW(this->hwnd, hacc, &msg))
+        if (TranslateAcceleratorW(this->hwnd, accelerator, &msg))
         {
             continue;
         }
@@ -68,12 +90,7 @@ int Dialog::DoModal(HACCEL hacc)
         DispatchMessageW(&msg);
     }
 
-    this->StyleEx(styleEx);
-
-    if (this->Parent())
-    {
-        this->Parent().Enable();
-    }
+    EnableWindow(parent, TRUE);
 
     return (int)msg.wParam;
 }
