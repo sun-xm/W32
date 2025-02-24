@@ -15,6 +15,8 @@ public:
 
     virtual bool Create(HWND parant = 0, HINSTANCE instance = 0);
 
+    int DoModal(HACCEL hacc = nullptr);
+
     Control Item(int dlgItemId) const;
 
 protected:

@@ -32,6 +32,46 @@ bool Dialog::Create(HWND parent, HINSTANCE instance)
     return !!this->hwnd;
 }
 
+int Dialog::DoModal(HACCEL hacc)
+{
+    if (this->Parent())
+    {
+        this->Parent().Disable();
+    }
+
+    auto styleEx = this->StyleEx();
+    this->StyleEx(styleEx | WS_EX_DLGMODALFRAME);
+
+    this->Show();
+
+    MSG  msg = {0};
+    BOOL ret;
+
+    while (0 != (ret = GetMessageW(&msg, nullptr, 0, 0)))
+    {
+        if (-1 == ret)
+        {
+            break;
+        }
+
+        if (TranslateAcceleratorW(this->hwnd, hacc, &msg))
+        {
+            continue;
+        }
+
+        if (IsDialogMessageW(this->hwnd, &msg))
+        {
+            continue;
+        }
+
+        TranslateMessage(&msg);
+        DispatchMessageW(&msg);
+    }
+
+    this->StyleEx(styleEx);
+    return (int)msg.wParam;
+}
+
 Control Dialog::Item(int dlgItemId) const
 {
     return Control(GetDlgItem(this->hwnd, dlgItemId));
