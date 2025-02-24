@@ -117,6 +117,41 @@ bool TreeViewItem::EnumerateChild(const function<bool(const TreeViewItem&)>& onI
     return false;
 }
 
+TreeViewItem TreeViewItem::Add(const std::wstring& text, HTREEITEM after)
+{
+    TVINSERTSTRUCTW insert = {0};
+    insert.item.mask = TVIF_TEXT;
+    insert.item.pszText = (LPWSTR)text.c_str();
+    insert.hParent = this->item;
+    insert.hInsertAfter = after;
+    return TreeViewItem(this->tree, (HTREEITEM)SendMessageW(this->tree, TVM_INSERTITEMW, 0, (LPARAM)&insert));
+}
+
+TreeViewItem TreeViewItem::Add(const std::wstring& text, void* data, HTREEITEM after)
+{
+    TVINSERTSTRUCTW insert = {0};
+    insert.item.mask = TVIF_TEXT | TVIF_PARAM;
+    insert.item.pszText = (LPWSTR)text.c_str();
+    insert.item.lParam = (LPARAM)data;
+    insert.hParent = this->item;
+    insert.hInsertAfter = after;
+    return TreeViewItem(this->tree, (HTREEITEM)SendMessageW(this->tree, TVM_INSERTITEMW, 0, (LPARAM)&insert));
+}
+
+void TreeViewItem::Remove()
+{
+    SendMessageW(this->tree, TVM_DELETEITEM, 0, (LPARAM)this->item);
+}
+
+void TreeViewItem::Clear()
+{
+    this->EnumerateChild([](TreeViewItem& item)
+    {
+        item.Remove();
+        return false;
+    });
+}
+
 
 TreeView::TreeView() : Control()
 {
@@ -138,37 +173,6 @@ bool TreeView::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
     this->hwnd = CreateWindowExW(0, WC_TREEVIEWW, nullptr, style, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
 
     return !!this->hwnd;
-}
-
-TreeViewItem TreeView::Add(const wstring& text, HTREEITEM parent, HTREEITEM after)
-{
-    TVINSERTSTRUCTW insert = {0};
-    insert.item.mask = TVIF_TEXT;
-    insert.item.pszText = (wchar_t*)text.c_str();
-    insert.hParent = parent;
-    insert.hInsertAfter = after;
-    return TreeViewItem(this->hwnd, (HTREEITEM)this->Send(TVM_INSERTITEMW, 0, (LPARAM)&insert));
-}
-
-TreeViewItem TreeView::Add(const wstring& text, void* data, HTREEITEM parent, HTREEITEM after)
-{
-    TVINSERTSTRUCTW insert = {0};
-    insert.item.mask = TVIF_TEXT | TVIF_PARAM;
-    insert.item.pszText = (wchar_t*)text.c_str();
-    insert.item.lParam = (LPARAM)data;
-    insert.hParent = parent;
-    insert.hInsertAfter = after;
-    return TreeViewItem(this->hwnd, (HTREEITEM)this->Send(TVM_INSERTITEMW, 0, (LPARAM)&insert));
-}
-
-void TreeView::Remove(HTREEITEM item)
-{
-    this->Send(TVM_DELETEITEM, 0, (LPARAM)item);
-}
-
-void TreeView::Clear()
-{
-    this->Remove(TVI_ROOT);
 }
 
 TreeViewItem TreeView::Root() const

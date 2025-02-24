@@ -21,6 +21,11 @@ public:
                                                                          // EnumerateChild() returns true if any callback returns true
     bool EnumerateChild(const std::function<bool(const TreeViewItem& item)>&) const;
 
+    TreeViewItem Add(const std::wstring& text, HTREEITEM after = TVI_LAST);
+    TreeViewItem Add(const std::wstring& text, void* data, HTREEITEM after = TVI_LAST);
+    void Remove();
+    void Clear();
+
     operator HTREEITEM() const
     {
         return this->item;
@@ -43,11 +48,6 @@ public:
     TreeView(HWND);
 
     bool Create(HWND parent, UINT id, DWORD style = WS_BORDER | WS_HSCROLL | WS_VSCROLL | TVS_HASBUTTONS | TVS_LINESATROOT, HINSTANCE instance = nullptr);
-
-    TreeViewItem Add(const std::wstring& text, HTREEITEM parent = TVI_ROOT, HTREEITEM after = TVI_LAST);
-    TreeViewItem Add(const std::wstring& text, void* data, HTREEITEM parent = TVI_ROOT, HTREEITEM after = TVI_LAST);
-    void Remove(HTREEITEM item);
-    void Clear();
 
     TreeViewItem Root() const;
     TreeViewItem Selection() const;
