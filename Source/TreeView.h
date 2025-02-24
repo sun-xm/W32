@@ -47,7 +47,7 @@ public:
     TreeView();
     TreeView(HWND);
 
-    bool Create(HWND parent, UINT id, DWORD style = WS_BORDER | WS_HSCROLL | WS_VSCROLL | TVS_HASBUTTONS | TVS_LINESATROOT, HINSTANCE instance = nullptr);
+    bool Create(HWND parent, UINT id, DWORD style = WS_BORDER | WS_HSCROLL | WS_VSCROLL | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT, HINSTANCE instance = nullptr);
 
     TreeViewItem Root() const;
     TreeViewItem Selection() const;
