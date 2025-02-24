@@ -69,6 +69,12 @@ int Dialog::DoModal(HACCEL hacc)
     }
 
     this->StyleEx(styleEx);
+
+    if (this->Parent())
+    {
+        this->Parent().Enable();
+    }
+
     return (int)msg.wParam;
 }
 
