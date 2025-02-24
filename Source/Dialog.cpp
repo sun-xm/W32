@@ -107,6 +107,11 @@ bool Dialog::OnCreated()
 
 void Dialog::OnDestroy()
 {
+    auto modal = this->StyleEx() & WS_EX_DLGMODALFRAME;
+    if (modal)
+    {
+        PostQuitMessage(0);
+    }
 }
 
 bool Dialog::OnCommand()
@@ -116,13 +121,7 @@ bool Dialog::OnCommand()
 
 void Dialog::OnClose()
 {
-    auto modal = this->StyleEx() & WS_EX_DLGMODALFRAME;
     this->Destroy();
-
-    if (modal)
-    {
-        PostQuitMessage(0);
-    }
 }
 
 void Dialog::OnSize()

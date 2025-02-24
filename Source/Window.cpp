@@ -70,6 +70,12 @@ bool Window::OnCreated()
 
 void Window::OnDestroy()
 {
+    auto owner  = GetWindow(this->hwnd, GW_OWNER);
+    auto parent = GetParent(this->hwnd);
+    if (!owner && !parent)
+    {
+        PostQuitMessage(0);
+    }
 }
 
 bool Window::OnCommand()
@@ -79,14 +85,7 @@ bool Window::OnCommand()
 
 void Window::OnClose()
 {
-    auto owner = GetWindow(this->hwnd, GW_OWNER);
-
     this->Destroy();
-
-    if (!owner)
-    {
-        PostQuitMessage(0);
-    }
 }
 
 void Window::OnPaint()
