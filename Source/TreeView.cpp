@@ -175,6 +175,11 @@ bool TreeView::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
     return !!this->hwnd;
 }
 
+HWND TreeView::GetEditControl() const
+{
+    return (HWND)this->Send(TVM_GETEDITCONTROL);
+}
+
 TreeViewItem TreeView::Root() const
 {
     return TreeViewItem(this->hwnd, TVI_ROOT);
