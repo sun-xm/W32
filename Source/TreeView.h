@@ -15,7 +15,10 @@ public:
     bool  Data(void* data);
     void* Data() const;
 
-    void Select();
+    void Collapse() const;
+    void Expand() const;
+    void Toggle() const;
+    void Select() const;
 
     bool EnumerateChild(const std::function<bool(TreeViewItem& item)>&); // Return true if item found in callback function then enumeration stops
                                                                          // EnumerateChild() returns true if any callback returns true

@@ -62,7 +62,22 @@ void* TreeViewItem::Data() const
     return (void*)tvi.lParam;
 }
 
-void TreeViewItem::Select()
+void TreeViewItem::Collapse() const
+{
+    SendMessageW(this->tree, TVM_EXPAND, TVE_COLLAPSE, (LPARAM)this->item);
+}
+
+void TreeViewItem::Expand() const
+{
+    SendMessageW(this->tree, TVM_EXPAND, TVE_EXPAND, (LPARAM)this->item);
+}
+
+void TreeViewItem::Toggle() const
+{
+    SendMessageW(this->tree, TVM_EXPAND, TVE_TOGGLE, (LPARAM)this->item);
+}
+
+void TreeViewItem::Select() const
 {
     SendMessageW(this->tree, TVM_SELECTITEM, TVGN_CARET, (LPARAM)this->item);
 }
