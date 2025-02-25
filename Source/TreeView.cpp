@@ -32,7 +32,7 @@ wstring TreeViewItem::Text(size_t maxLength) const
     tvi.pszText = buf;
     tvi.cchTextMax = (int)maxLength;
 
-    if (!SendMessageW(this->tree, TVM_GETITEM, 0, (LPARAM)&tvi))
+    if (!SendMessageW(this->tree, TVM_GETITEMW, 0, (LPARAM)&tvi))
     {
         return wstring();
     }
@@ -44,7 +44,7 @@ bool TreeViewItem::Data(void* data)
 {
     TVITEMW tvi;
     tvi.mask = TVIF_PARAM  | TVIF_HANDLE;
-    tvi.hItem = item;
+    tvi.hItem = this->item;
     tvi.lParam = (LPARAM)data;
     return SendMessageW(this->tree, TVM_SETITEMW, 0, (LPARAM)&tvi) ? true : false;
 }
@@ -53,7 +53,7 @@ void* TreeViewItem::Data() const
 {
     TVITEMW tvi;
     tvi.mask = TVIF_PARAM  | TVIF_HANDLE;
-    tvi.hItem = item;
+    tvi.hItem = this->item;
     if (!SendMessageW(this->tree, TVM_GETITEMW, 0, (LPARAM)&tvi))
     {
         return nullptr;
