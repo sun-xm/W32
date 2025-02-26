@@ -62,6 +62,11 @@ void* TreeViewItem::Data() const
     return (void*)tvi.lParam;
 }
 
+HWND TreeViewItem::Edit()
+{
+    return (HWND)SendMessageW(this->tree, TVM_EDITLABEL, 0, (LPARAM)this->item);
+}
+
 void TreeViewItem::Collapse() const
 {
     SendMessageW(this->tree, TVM_EXPAND, TVE_COLLAPSE, (LPARAM)this->item);

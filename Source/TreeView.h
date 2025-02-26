@@ -15,6 +15,8 @@ public:
     bool  Data(void* data);
     void* Data() const;
 
+    HWND Edit();
+
     void Collapse() const;
     void Expand() const;
     void Toggle() const;
