@@ -62,6 +62,11 @@ void* TreeViewItem::Data() const
     return (void*)tvi.lParam;
 }
 
+HWND TreeViewItem::Tree() const
+{
+    return this->tree;
+}
+
 HWND TreeViewItem::Edit()
 {
     return (HWND)SendMessageW(this->tree, TVM_EDITLABEL, 0, (LPARAM)this->item);
@@ -198,6 +203,11 @@ bool TreeView::Create(HWND parent, UINT id, DWORD style, HINSTANCE instance)
 HWND TreeView::GetEditControl() const
 {
     return (HWND)this->Send(TVM_GETEDITCONTROL);
+}
+
+bool TreeView::EndEdit(bool cancel)
+{
+    return this->Send(TVM_ENDEDITLABELNOW, cancel ? TRUE : FALSE) ? true : false;
 }
 
 TreeViewItem TreeView::Root() const

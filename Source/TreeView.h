@@ -15,6 +15,7 @@ public:
     bool  Data(void* data);
     void* Data() const;
 
+    HWND Tree() const;
     HWND Edit();
 
     void Collapse() const;
@@ -22,8 +23,9 @@ public:
     void Toggle() const;
     void Select() const;
 
-    bool EnumerateChild(const std::function<bool(TreeViewItem& item)>&); // Return true if item found in callback function then enumeration stops
-                                                                         // EnumerateChild() returns true if any callback returns true
+    // EmurateChild() stops and returns true if any callback function return true.
+    // Otherwise EmurateChild() return false;
+    bool EnumerateChild(const std::function<bool(TreeViewItem& item)>&);
     bool EnumerateChild(const std::function<bool(const TreeViewItem& item)>&) const;
 
     TreeViewItem Add(const std::wstring& text, HTREEITEM after = TVI_LAST);
@@ -53,7 +55,9 @@ public:
     TreeView(HWND);
 
     bool Create(HWND parent, UINT id, DWORD style = WS_BORDER | WS_HSCROLL | WS_VSCROLL | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT, HINSTANCE instance = nullptr);
+
     HWND GetEditControl() const;
+    bool EndEdit(bool cancel = false);
 
     TreeViewItem Root() const;
     TreeViewItem Selection() const;
