@@ -1,5 +1,7 @@
 #include "Dialog.h"
 
+#define PROP_MODAL  L"MODAL"
+
 using namespace std;
 
 Dialog::Dialog(UINT dialogId) : id(dialogId)
@@ -38,6 +40,7 @@ int Dialog::DoModal(HWND parent, int x, int y, HINSTANCE instance, HACCEL accele
     {
         return -1;
     }
+    this->SetProp(PROP_MODAL, (HANDLE)1);
 
     EnableWindow(parent, FALSE);
 
@@ -91,9 +94,13 @@ int Dialog::DoModal(HWND parent, int x, int y, HINSTANCE instance, HACCEL accele
     }
 
     EnableWindow(parent, TRUE);
-    SetForegroundWindow(parent);
 
     return (int)msg.wParam;
+}
+
+bool Dialog::IsModal() const
+{
+    return this->GetProp(PROP_MODAL) ? true : false;
 }
 
 Control Dialog::Item(int dlgItemId) const
@@ -108,8 +115,7 @@ bool Dialog::OnCreated()
 
 void Dialog::OnDestroy()
 {
-    auto modal = this->StyleEx() & WS_EX_DLGMODALFRAME;
-    if (modal)
+    if (this->IsModal())
     {
         PostQuitMessage(0);
     }
@@ -122,6 +128,10 @@ bool Dialog::OnCommand()
 
 void Dialog::OnClose()
 {
+    if (this->IsModal())
+    {
+        SetForegroundWindow(this->Parent());
+    }
     this->Destroy();
 }
 

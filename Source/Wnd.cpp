@@ -266,7 +266,7 @@ bool Wnd::SetProp(const wchar_t* name, HANDLE data)
     return ::SetPropW(this->hwnd, name, data) ? true : false;
 }
 
-HANDLE Wnd::GetProp(const wchar_t* name)
+HANDLE Wnd::GetProp(const wchar_t* name) const
 {
     return ::GetPropW(this->hwnd, name);
 }

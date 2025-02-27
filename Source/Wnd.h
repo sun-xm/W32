@@ -61,7 +61,7 @@ public:
     void  StyleEx(DWORD style);
 
     bool   SetProp(const wchar_t* name, HANDLE data);
-    HANDLE GetProp(const wchar_t* name);
+    HANDLE GetProp(const wchar_t* name) const;
     HANDLE RemoveProp(const wchar_t* name);
 
     void ClipChildren(bool clip = true);
