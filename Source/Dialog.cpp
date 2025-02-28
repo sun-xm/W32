@@ -34,40 +34,14 @@ bool Dialog::Create(HWND parent, HINSTANCE instance)
     return !!this->hwnd;
 }
 
-int Dialog::DoModal(HWND parent, int x, int y, HINSTANCE instance, HACCEL accelerator)
+int Dialog::DoModal(HACCEL accelerator)
 {
-    if (!this->Create(parent, instance))
-    {
-        return -1;
-    }
     this->SetProp(PROP_MODAL, (HANDLE)1);
 
-    EnableWindow(parent, FALSE);
-
-    RECT prect;
-    GetWindowRect(parent, &prect);
-
-    RECT drect;
-    GetWindowRect(this->hwnd, &drect);
-
-    if (CW_USEDEFAULT == x)
+    if (this->Parent())
     {
-        auto pw = prect.right - prect.left;
-        auto dw = drect.right - drect.left;
-        x =  (pw - dw) / 2 + prect.left;
+        this->Parent().Disable();
     }
-    if (CW_USEDEFAULT == y)
-    {
-        auto ph = prect.bottom - prect.top;
-        auto dh = drect.bottom - drect.top;
-        y = (ph - dh) / 2 + prect.top;
-    }
-
-    x = x < 0 ? 0 : x;
-    y = y < 0 ? 0 : y;
-
-    this->MoveTo(x, y);
-    this->Show();
 
     MSG  msg = {0};
     BOOL ret;
@@ -93,7 +67,10 @@ int Dialog::DoModal(HWND parent, int x, int y, HINSTANCE instance, HACCEL accele
         DispatchMessageW(&msg);
     }
 
-    EnableWindow(parent, TRUE);
+    if (this->Parent())
+    {
+        this->Parent().Enable();
+    }
 
     return (int)msg.wParam;
 }

@@ -23,25 +23,23 @@ Application::operator HINSTANCE()
     return this->hinst;
 }
 
-int Application::Run(Dialog& dialog, int nCmdShow, bool isDialog)
+int Application::Run(Dialog& dialog, int nCmdShow)
 {
     if (!dialog.Create(nullptr, this->hinst))
     {
         return -1;
     }
 
-    dialog.StyleEx(dialog.StyleEx() | WS_EX_DLGMODALFRAME);
     ShowWindow(dialog, nCmdShow);
-
-    return MessageLoop(dialog, Application::Accel(), isDialog);
+    return dialog.DoModal(this->accel);
 }
 
-int Application::Run(Dialog&& dialog, int nCmdShow, bool isDialog)
+int Application::Run(Dialog&& dialog, int nCmdShow)
 {
-    return Run(dialog, nCmdShow, isDialog);
+    return Run((Dialog&)dialog, nCmdShow);
 }
 
-int Application::Run(Window& window, int nCmdShow, bool isDialog)
+int Application::Run(Window& window, int nCmdShow, bool likeDialog)
 {
     if (!window.Create(0, WS_OVERLAPPEDWINDOW, 0, this->hinst))
     {
@@ -50,12 +48,12 @@ int Application::Run(Window& window, int nCmdShow, bool isDialog)
 
     ShowWindow(window, nCmdShow);
 
-    return MessageLoop(window, Application::Accel(), isDialog);
+    return MessageLoop(window, Application::Accel(), likeDialog);
 }
 
-int Application::Run(Window&& window, int nCmdShow, bool isDialog)
+int Application::Run(Window&& window, int nCmdShow, bool likeDialog)
 {
-    return Run(window, nCmdShow, isDialog);
+    return Run(window, nCmdShow, likeDialog);
 }
 
 Application& Application::Instance()
@@ -68,7 +66,7 @@ HACCEL Application::Accel()
     return instance->accel;
 }
 
-int Application::MessageLoop(HWND hWnd, HACCEL hAcc, bool isDialog)
+int Application::MessageLoop(HWND hWnd, HACCEL hAcc, bool likeDialog)
 {
     MSG  msg = {0};
     BOOL ret;
@@ -85,7 +83,7 @@ int Application::MessageLoop(HWND hWnd, HACCEL hAcc, bool isDialog)
             continue;
         }
 
-        if (isDialog && IsDialogMessageW(hWnd, &msg))
+        if (likeDialog && IsDialogMessageW(hWnd, &msg))
         {
             continue;
         }
