@@ -83,7 +83,7 @@ bool Dialog::IsModal() const
 
 void Dialog::Center(HWND hwnd)
 {
-    hwnd = hwnd ? hwnd : this->Parent();
+    hwnd = hwnd ? hwnd : (HWND)this->Parent();
     if (!hwnd || !this->hwnd || !this->Parent())
     {
         return;
