@@ -38,9 +38,10 @@ int Dialog::DoModal(HACCEL accelerator)
 {
     this->SetProp(PROP_MODAL, (HANDLE)1);
 
-    if (this->Parent())
+    auto parent = (HWND)this->Parent();
+    if (parent)
     {
-        this->Parent().Disable();
+        EnableWindow(parent, FALSE);
     }
 
     MSG  msg = {0};
@@ -67,9 +68,9 @@ int Dialog::DoModal(HACCEL accelerator)
         DispatchMessageW(&msg);
     }
 
-    if (this->Parent())
+    if (parent)
     {
-        this->Parent().Enable();
+        EnableWindow(parent, TRUE);
     }
 
     return (int)msg.wParam;
@@ -78,6 +79,35 @@ int Dialog::DoModal(HACCEL accelerator)
 bool Dialog::IsModal() const
 {
     return this->GetProp(PROP_MODAL) ? true : false;
+}
+
+void Dialog::Center(HWND hwnd)
+{
+    hwnd = hwnd ? hwnd : this->Parent();
+    if (!hwnd || !this->hwnd || !this->Parent())
+    {
+        return;
+    }
+
+    RECT wrect, drect;
+    GetWindowRect(hwnd, &wrect);
+    GetWindowRect(this->hwnd, &drect);
+
+    auto ww = wrect.right - wrect.left;
+    auto wh = wrect.bottom - wrect.top;
+    auto dw = drect.right - drect.left;
+    auto dh = drect.bottom - drect.top;
+
+    auto x = (ww - dw) / 2 + wrect.left;
+    auto y = (wh - dh) / 2 + wrect.top;
+
+    RECT prect = {0};
+    if (!(WS_POPUP & this->Style()))
+    {
+        GetWindowRect(this->Parent(), &prect);
+    }
+
+    this->MoveTo(x - prect.left, y - prect.top);
 }
 
 Control Dialog::Item(int dlgItemId) const
