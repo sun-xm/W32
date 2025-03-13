@@ -26,7 +26,9 @@ public:
     // EmurateChild() stops and returns true if any callback function return true.
     // Otherwise EmurateChild() return false;
     bool EnumerateChild(const std::function<bool(TreeViewItem& item)>&);
+    bool EnumerateChild(const std::function<bool(TreeViewItem& item, void* param)>&, void*);
     bool EnumerateChild(const std::function<bool(const TreeViewItem& item)>&) const;
+    bool EnumerateChild(const std::function<bool(const TreeViewItem& item, void* param)>&, void*) const;
 
     TreeViewItem Add(const std::wstring& text, HTREEITEM after = TVI_LAST);
     TreeViewItem Add(const std::wstring& text, void* data, HTREEITEM after = TVI_LAST);
@@ -57,7 +59,7 @@ public:
     bool Create(HWND parent, UINT id, DWORD style = WS_BORDER | WS_HSCROLL | WS_VSCROLL | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT, HINSTANCE instance = nullptr);
 
     HWND GetEditControl() const;
-    bool EndEdit(bool cancel = false);
+    bool EndEdit(bool cancel = false) const;
 
     TreeViewItem Root() const;
     TreeViewItem Selection() const;

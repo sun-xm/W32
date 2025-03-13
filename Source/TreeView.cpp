@@ -117,6 +117,31 @@ bool TreeViewItem::EnumerateChild(const function<bool(TreeViewItem&)>& onItem)
     return false;
 }
 
+bool TreeViewItem::EnumerateChild(const function<bool(TreeViewItem&, void*)>& onItem, void* param)
+{
+    if (onItem)
+    {
+        auto child = (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_CHILD, (LPARAM)this->item);
+        if (!child)
+        {
+            return false;
+        }
+
+        bool stop;
+        do
+        {
+            auto item = TreeViewItem(this->tree, child);
+            stop = onItem(item, param);
+            child = stop ? nullptr : (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_NEXT, (LPARAM)child);
+
+        } while (child);
+
+        return stop;
+    }
+
+    return false;
+}
+
 bool TreeViewItem::EnumerateChild(const function<bool(const TreeViewItem&)>& onItem) const
 {
     if (onItem)
@@ -132,6 +157,31 @@ bool TreeViewItem::EnumerateChild(const function<bool(const TreeViewItem&)>& onI
         {
             auto item = TreeViewItem(this->tree, child);
             stop = onItem(item);
+            child = stop ? nullptr : (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_NEXT, (LPARAM)child);
+
+        } while (child);
+
+        return stop;
+    }
+
+    return false;
+}
+
+bool TreeViewItem::EnumerateChild(const function<bool(const TreeViewItem&, void*)>& onItem, void* param) const
+{
+    if (onItem)
+    {
+        auto child = (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_CHILD, (LPARAM)this->item);
+        if (!child)
+        {
+            return false;
+        }
+
+        bool stop;
+        do
+        {
+            auto item = TreeViewItem(this->tree, child);
+            stop = onItem(item, param);
             child = stop ? nullptr : (HTREEITEM)SendMessageW(this->tree, TVM_GETNEXTITEM, TVGN_NEXT, (LPARAM)child);
 
         } while (child);
@@ -205,7 +255,7 @@ HWND TreeView::GetEditControl() const
     return (HWND)this->Send(TVM_GETEDITCONTROL);
 }
 
-bool TreeView::EndEdit(bool cancel)
+bool TreeView::EndEdit(bool cancel) const
 {
     return this->Send(TVM_ENDEDITLABELNOW, cancel ? TRUE : FALSE) ? true : false;
 }

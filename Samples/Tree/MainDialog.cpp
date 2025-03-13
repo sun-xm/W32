@@ -19,8 +19,13 @@ bool MainDialog::OnCreated()
     TreeView tree(this->Item(IDC_TREE));
     auto hello = tree.Root().Add(L"Hello");
     auto world = hello.Add(L"World");
-    hello.Clear();
-    // tree.Root().Clear();
+
+    function<bool(TreeViewItem&)> en = [&en](TreeViewItem& item)
+    {
+        wcout << item.Text() << endl;
+        return item.EnumerateChild(en);
+    };
+    tree.Root().EnumerateChild(en);
 
     return true;
 }
