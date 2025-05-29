@@ -19,7 +19,17 @@ void Control::Subclass(const WNDFUNC& proc)
 {
     const static auto wndproc = (WNDPROC)[](HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)->LRESULT
     {
-        return ((Subdata*)GetWindowLongPtrW(hWnd, GWLP_USERDATA))->subproc(hWnd, uMsg, wParam, lParam);
+        auto subdata = (Subdata*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        auto result  = subdata->subproc(hWnd, uMsg, wParam, lParam);
+
+        if (WM_NCDESTROY == uMsg)
+        {
+            SetWindowLongPtrW(hWnd, GWLP_WNDPROC,  (LONG_PTR)subdata->defproc);
+            SetWindowLongPtrW(hWnd, GWLP_USERDATA, 0);
+            delete subdata;
+        }
+
+        return result;
     };
 
     if (!this->hwnd)
