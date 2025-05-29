@@ -1,5 +1,4 @@
 #include "TreeView.h"
-#include "Cleanup.h"
 
 using namespace std;
 
@@ -23,13 +22,14 @@ bool TreeViewItem::Text(const wstring& text)
 wstring TreeViewItem::Text(size_t maxLength) const
 {
     maxLength++;
-    auto buf = new wchar_t[maxLength];
-    ONCLEANUP(buf, [buf]{ delete[] buf; });
+
+    wstring buf;
+    buf.resize(maxLength);
 
     TVITEMW tvi;
     tvi.mask = TVIF_TEXT | TVIF_HANDLE;
     tvi.hItem = this->item;
-    tvi.pszText = buf;
+    tvi.pszText = &buf[0];
     tvi.cchTextMax = (int)maxLength;
 
     if (!SendMessageW(this->tree, TVM_GETITEMW, 0, (LPARAM)&tvi))
@@ -37,7 +37,8 @@ wstring TreeViewItem::Text(size_t maxLength) const
         return wstring();
     }
 
-    return wstring(buf);
+    buf.resize(wcslen(tvi.pszText));
+    return buf;
 }
 
 bool TreeViewItem::Data(void* data)
