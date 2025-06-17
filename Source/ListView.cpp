@@ -95,6 +95,11 @@ int ListView::ColumnWidth(int index) const
     return ListView_GetColumnWidth(this->hwnd, index);
 }
 
+bool ListView::ColumnWidth(int index, int width)
+{
+    return ListView_SetColumnWidth(this->hwnd, index, width) ? true : false;
+}
+
 int ListView::Add(const wstring& text, void* data)
 {
     return this->Insert(this->Count(), text, data);

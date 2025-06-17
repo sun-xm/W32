@@ -15,12 +15,13 @@ public:
     DWORD ExtendedStyle() const;
 
     // First column cannot be other than left-aligned. An empty first column can used as walkaround
-    int  AddColumn(const std::wstring& title, int width, int format = LVCFMT_LEFT);
+    int  AddColumn(const std::wstring& title, int width = 0, int format = LVCFMT_LEFT);
     int  InsertColumn(int index, const std::wstring& title, int width, int format = LVCFMT_LEFT);
     bool RemoveColumn(int index);
 
-    int ColumnCount() const;
-    int ColumnWidth(int index) const;
+    int  ColumnCount() const;
+    int  ColumnWidth(int index) const;
+    bool ColumnWidth(int index, int width);
 
     int  Add(const std::wstring& text, void* data = nullptr);
     int  Insert(int index, const std::wstring& text, void* data = nullptr);
