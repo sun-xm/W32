@@ -159,12 +159,12 @@ public:
         item.mask = LVIF_TEXT;
         item.iItem =  index;
         item.iSubItem = column;
-        return ListView_GetItem(this->hwnd, &item) ? wstring(item.pszText) : wstring();
+        return ListView_GetItem(this->hwnd, &item) ? std::wstring(item.pszText) : std::wstring();
     }
     std::wstring Text() const
     {
         auto index = this->Selection();
-        return index < 0 ? wstring() : this->Text(index, 0);
+        return index < 0 ? std::wstring() : this->Text(index, 0);
     }
 
     int Selection() const
