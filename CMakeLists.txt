@@ -20,13 +20,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/Source")
-file(GLOB SOURCE ${SRC_DIR}/*.cpp)
-add_library(W32LIB STATIC ${SOURCE})
-target_include_directories(
-    W32LIB
-    PUBLIC
-    ${SRC_DIR}
+include_directories(
+    "${CMAKE_CURRENT_LIST_DIR}/Source"
 )
 
 add_compile_definitions(WIN32 _WINDOWS _UNICODE UNICODE)

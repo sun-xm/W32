@@ -5,16 +5,55 @@
 class ProgressBar : public Control
 {
 public:
-    ProgressBar();
-    ProgressBar(HWND);
+    ProgressBar() {}
+    ProgressBar(HWND hwnd) : Control(hwnd) {}
 
-    bool Create(HWND parent, UINT id, DWORD style = TBS_HORZ, HINSTANCE instance = nullptr);
+    bool Create(HWND parent, UINT id, DWORD style = TBS_HORZ, HINSTANCE instance = nullptr)
+    {
+        if (!parent || this->hwnd)
+        {
+            return false;
+        }
 
-    void SetRange(int  min, int  max);
-    void GetRange(int& min, int& max);
+        style |= WS_CHILD;
 
-    void Position(int pos);
-    int  Position() const;
+        this->hwnd = CreateWindowExW(0, PROGRESS_CLASSW, nullptr, style, 0, 0, 0, 0, parent, (HMENU)(UINT_PTR)id, instance, nullptr);
 
-    void Marquee(bool enable, UINT update = 0);
+        return !!this->hwnd;
+    }
+
+    void SetRange(int  min, int  max)
+    {
+        this->Send(PBM_SETRANGE32, (WPARAM)min, (LPARAM)max);
+    }
+    void GetRange(int& min, int& max)
+    {
+        PBRANGE range;
+        this->Send(PBM_GETRANGE, 0, (LPARAM)&range);
+        min = range.iLow;
+        max = range.iHigh;
+    }
+
+    void Position(int pos)
+    {
+        this->Send(PBM_SETPOS, (WPARAM)pos);
+    }
+    int  Position() const
+    {
+        return (int)this->Send(PBM_GETPOS);
+    }
+
+    void Marquee(bool enable, UINT update = 0)
+    {
+        if (enable)
+        {
+            this->Style(this->Style() | PBS_MARQUEE);
+        }
+        else
+        {
+            this->Style(this->Style() &~ PBS_MARQUEE);
+        }
+
+        this->Send(PBM_SETMARQUEE, enable ? TRUE : FALSE, update);
+    }
 };
