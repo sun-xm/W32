@@ -3,11 +3,12 @@
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
 
-#include <Windows.h>
+#include <algorithm>
 #include <Cleanup.h>
 #include <d2d1.h>
 #include <dwrite.h>
 #include <mutex>
+#include <Windows.h>
 
 class D2DFactory
 {
@@ -472,8 +473,8 @@ public:
         }
         ONCLEANUP(target, [target]{ target->Release(); });
 
-        width  = max(0, width);
-        height = max(0, height);
+        width  = (std::max)(0, width);
+        height = (std::max)(0, height);
 
         return SUCCEEDED(target->Resize(D2D1::SizeU(width, height))) ? true : false;
     }
@@ -706,8 +707,8 @@ public:
             return D2DBitmap();
         }
 
-        width  = max(0, width);
-        height = max(0, height);
+        width  = (std::max)(0, width);
+        height = (std::max)(0, height);
 
         ID2D1Bitmap* bitmap;
         if (FAILED(this->itf->CreateBitmap(D2D1::SizeU(width, height), D2D1::BitmapProperties(this->itf->GetPixelFormat()), &bitmap)))
